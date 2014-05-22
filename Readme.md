@@ -53,7 +53,7 @@ To achieve simplicity the templates are kept simple but the "merge" requires a b
 Given some markup like 
     
     <div id="content" abc:content>
-      <p>some imaginary data for instant visualization in the browser&lt;/p>
+      <p>some imaginary data for instant visualization in the browser</p>
     </div>
         
 upon merging it with the context 
@@ -63,7 +63,7 @@ upon merging it with the context
 the result is
 
     <div id="content" abc:content>
-      <p>real data&lt;/p>
+      <p>real data</p>
     </div>
 
 **Note:** We use JSoup element selection semantics. If the `abc:content` is unique then `div[abc:content]` and `[abc:content]` have the same effects. 
