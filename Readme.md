@@ -87,7 +87,7 @@ the result is
      link to the next level
     </a>
 
-**Note:** The distinction between element replacement and attribute replacement is made at the context and not in the template. The prefix `a.` can be read as replace attribute and not the inner html. Hence ` Map("a.[abc:href]" -> """real/path/level-01.html""")` is different from ` Map("[abc:href]" -> """real/path/level-01.html""")`: the previous would result in `<a href="path/some_level.html" abc:href>link to the next level</a>` and the later in `<a href="path/some_level.html" abc:href>link to the next level</a>` 
+**Note:** The distinction between element replacement and attribute replacement is made at the context and not in the template. The prefix `a.` can be read as replace attribute and not the inner html. Hence ` Map("a.[abc:href]" -> """real/path/level-01.html""")` is different from ` Map("[abc:href]" -> """real/path/level-01.html""")`: the previous would result in `<a href="real/path/level-01.html">link to the next level</a>` and the later in `<a href="path/some_level.html">real/path/level-01.html</a>` 
 
 
 
