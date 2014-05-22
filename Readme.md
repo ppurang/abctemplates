@@ -28,11 +28,9 @@ To achieve simplicity the templates are kept simple but the "merge" requires a b
 
 Given some markup like 
     
-    &lt;div id="content" abc:content>
-    
-      &lt;p>some imaginary data for instant visualization in the browser&lt;/p>
-    
-    &lt;/div>
+    <div id="content" abc:content>
+      <p>some imaginary data for instant visualization in the browser&lt;/p>
+    </div>
         
 upon merging it with the context 
      
@@ -40,11 +38,9 @@ upon merging it with the context
 
 the result is
 
-    &lt;div id="content" abc:content>
-    
-      &lt;p>real data&lt;/p>
-    
-    &lt;/div>
+    <div id="content" abc:content>
+      <p>real data&lt;/p>
+    </div>
 
 **Note:** We use JSoup element selection semantics. If the `abc:content` is unique then `div[abc:content]` and `[abc:content]` have the same effects. 
 
@@ -53,9 +49,9 @@ the result is
 
 Given some markup like 
     
-    &lt;a href="path/some_level.html" abc:href>
+    <a href="path/some_level.html" abc:href>
      link to the next level
-    &lt;/a>
+    </a>
         
 upon merging it with the context 
      
@@ -63,9 +59,9 @@ upon merging it with the context
 
 the result is
 
-    &lt;a href="real/path/level-01.html">
+    <a href="real/path/level-01.html">
      link to the next level
-    &lt;/a>
+    </a>
 
 **Note:** The distinction between element replacement and attribute replacement is made at the context and not in the template. The prefix `a.` can be read as replace attribute and not the inner html. Hence ` Map("a.[abc:href]" -> """real/path/level-01.html""")` is different from ` Map("[abc:href]" -> """real/path/level-01.html""")`: the previous would result in `<a href="path/some_level.html" abc:href>link to the next level</a>` and the later in `<a href="path/some_level.html" abc:href>link to the next level</a>` 
 
@@ -75,9 +71,9 @@ Of course, you can combine the two
 
 Given some markup like 
     
-    &lt;a href="path/some_level.html" abc:href abc:link-text>
+    <a href="path/some_level.html" abc:href abc:link-text>
      link to the next level
-    &lt;/a>
+    </a>
         
 upon merging it with the context 
      
@@ -85,9 +81,9 @@ upon merging it with the context
 
 the result is
 
-    &lt;a href="real/path/level-01.html">
+    <a href="real/path/level-01.html">
      Go to the first level
-    &lt;/a>
+    </a>
 
 
 ## Unfortunate 
