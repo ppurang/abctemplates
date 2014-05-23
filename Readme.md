@@ -62,7 +62,7 @@ upon merging it with the context
 
 the result is
 
-    <div id="content" abc:content>
+    <div id="content">
       <p>real data</p>
     </div>
 
@@ -141,7 +141,9 @@ A complete html-template, i.e. a template with `html`, `head` and `body` tags, s
 
 1. Use unique ids under the namespace `abc:`
 
-2. Validate the result. It is as easy as 
+2. Don't cache the Templates. 
+
+3. Validate the result. It is as easy as 
 
 ```scala 
    
@@ -157,7 +159,7 @@ A complete html-template, i.e. a template with `html`, `head` and `body` tags, s
    // choosing "abc___" as prefix should be ok see http://www.w3.org/TR/REC-xml-names/#NT-Prefix and http://www.w3.org/TR/REC-xml/#NT-Name
 
 ```
-3. Don't cache the Templates. 
+
 
 ## What's missing?
 
