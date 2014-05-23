@@ -8,7 +8,6 @@ class Template(private val contents: String) {
 
   import Template._
 
-  private lazy val document: Document = Jsoup.parse(contents)
 
   def fragmentMerge(m: Map[String, String]) : String = {
     val result = merge(m)
@@ -17,6 +16,7 @@ class Template(private val contents: String) {
   }
 
   def merge(m: Map[String, String]) : String = {
+    val document = Jsoup.parse(contents)
     for((k, v) <- m) {
       if(k.startsWith(ATTRIBUTE + ".") ) {
         val a = k.replaceFirst(ATTRIBUTE + ".", "")

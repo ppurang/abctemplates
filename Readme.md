@@ -87,9 +87,29 @@ the result is
      link to the next level
     </a>
 
-**Note:** The distinction between element replacement and attribute replacement is made at the context and not in the template. The prefix `a.` can be read as replace attribute and not the inner html. Hence ` Map("a.[abc:href]" -> """real/path/level-01.html""")` is different from ` Map("[abc:href]" -> """real/path/level-01.html""")`: the previous would result in `<a href="real/path/level-01.html">link to the next level</a>` and the later in `<a href="path/some_level.html">real/path/level-01.html</a>` 
+**Note:** The distinction between element replacement and attribute replacement is made at the context and not in the template. The prefix `a.` can be read as replace an attribute and not the inner html. Hence the context `Map("a.[abc:href]" -> """real/path/level-01.html""")` is different from ` Map("[abc:href]" -> """real/path/level-01.html""")`: the previous would result in `<a href="real/path/level-01.html">link to the next level</a>` and the later in `<a href="path/some_level.html">real/path/level-01.html</a>`. Here is the distinction as example code blocks:
 
+``` scala
+    import Template._
+    val t = Template("""<a href="path/some_level.html" abc:href>link to the next level</a>""")
+    val c = Map("a.[abc:href]" -> """real/path/level-01.html""")   //note the 'a.' in the key
+    
+    t.mergeFragment(c)
+    
+    //results in the 'href' attribute being replaced
+    //<a href="real/path/level-01.html">link to the next level</a>
+```
 
+``` scala
+    import Template._
+    val t = Template("""<a href="path/some_level.html" abc:href>link to the next level</a>""")
+    val c = Map("[abc:href]" -> """real/path/level-01.html""")   //note how the 'a.' is missing in the key
+    
+    t.mergeFragment(c)
+    
+    //results in an unaltered 'href' attribute but the inner html gets replaced
+    //<a href="path/some_level.html">real/path/level-01.html</a>
+```
 
 Of course, you can combine the two
 
@@ -137,6 +157,7 @@ A complete html-template, i.e. a template with `html`, `head` and `body` tags, s
    // choosing "abc___" as prefix should be ok see http://www.w3.org/TR/REC-xml-names/#NT-Prefix and http://www.w3.org/TR/REC-xml/#NT-Name
 
 ```
+3. Don't cache the Templates. 
 
 ## What's missing?
 
@@ -146,11 +167,82 @@ A complete html-template, i.e. a template with `html`, `head` and `body` tags, s
 io.Source.fromFile("some/file").mkString
 ```
 
-2. Cache the templates. To minimize time to parse the same document again and again it would be good to cache em. Clients could cache the template **but such templates aren't thread safe as the underlying Jsoup document isn't thread safe.** 
-
-3. Performance: We have paid some attention to making the code as fast as possible. We use "static" members where ever possible. Inline stuff. Have a single syntactic `for` on the immutable map. In the end we can't be faster than Jsoup, selection and modification operations.
+2. Performance: We have paid some attention to making the code as fast as possible. We use "static" members where ever possible. Inline stuff. Have a single syntactic `for` on the immutable map. In the end we can't be faster than Jsoup, selection and modification operations.
 
 
 ## Advanced Usage 
 
-Check the `TemplateSpec` spec `allow for Block expressions` in the tests folder.  
+
+1. Collections:
+ 
+```scala
+
+   sealed trait Sex
+   case object Male extends Sex {
+    override def toString = "M"
+   }
+   case object Female extends Sex {
+     override def toString = "F"
+   }
+
+   case class Location(city: Vector[String])
+
+   case class Person(fn: String, ln: String, sex: Sex, locs: Location)
+
+   //a collection
+   val ps = Vector(
+    Person("GI","Joe", Male, Location(Vector("sfo", "chi"))),
+    Person("Dane","Joe", Female, Location(Vector("nyc"))),
+    Person("Baby","Jane", Female, Location(Vector("lon")))
+   )
+
+    val h =
+      """
+        |<div class="entry">
+        |  <span abc:sex>M</span>
+        |  <h1 abc:name>Max Musterman</h1>
+        |  <ul abc:loc>
+        |    <li>ber</li>
+        |    <li>muc</li>
+        |  </ul>
+        |</div>
+        |
+      """.stripMargin
+
+   val li = """<li abc:loc>ber</li>""" //a sub template
+
+   // render the sub template as part of the context
+   val templateLi = Template(li)
+    def map(p: Person): Map[String, String] = Map(
+     "[abc:sex]" -> p.sex.toString,
+     "[abc:name]" -> (p.fn + " "+ p.ln),
+     "[abc:loc]" -> (for {l <- p.locs.city } yield templateLi.fragmentMerge(Map("[abc:loc]" -> l))).mkString)
+
+   val result = (for {
+      i <- ps
+      x = map(i)
+      y = Template(h).fragmentMerge(x)
+    } yield y).mkString
+    
+    /* results in:
+    <div class="entry">
+      <span>M</span>
+       <h1>GI Joe</h1>
+       <ul>
+        <li>sfo</li>
+        <li>chi</li>
+       </ul>
+    </div><div class="entry">
+      <span>F</span>
+       <h1>Dane Joe</h1>
+       <ul>
+        <li>nyc</li>
+       </ul>
+      </div><div class="entry">
+       <span>F</span>
+       <h1>Baby Jane</h1>
+       <ul>
+        <li>lon</li>
+       </ul>
+    </div>*/
+```

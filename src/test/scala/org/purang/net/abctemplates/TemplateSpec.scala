@@ -49,7 +49,6 @@ class TemplateSpec extends FlatSpec with Matchers {
     result should not include("abc:")
   }
 
-
   it should "allow fragment merges with attribute replacement" in {
 
     val h =
@@ -68,8 +67,6 @@ class TemplateSpec extends FlatSpec with Matchers {
     val href = "stylesheets/print-sgshgshg.css"
     val title  = "altered title"
     val result = template.fragmentMerge(Map("a.[abc:href]" -> href, "[abc:title]" -> title))
-
-    //println(result)
 
     result should include(s"""href="$href"""")
     result should include(title)
@@ -91,16 +88,70 @@ class TemplateSpec extends FlatSpec with Matchers {
     val text  = "altered text"
     val result = template.fragmentMerge(Map("a.[abc:href]" -> href, "[abc:link-text]" -> text))
 
-    println(result)
 
     result should include(s"""href="$href"""")
     result should include(text)
     result should not include "abc:"
   }
 
+  it should "allow for Nested expressions" in {
+    sealed trait Sex
+    case object Male extends Sex {
+      override def toString = "M"
+    }
+    case object Female extends Sex {
+      override def toString = "F"
+    }
+
+    case class Location(city: Vector[String])
+
+    case class Person(fn: String, ln: String, sex: Sex, locs: Location)
+    val ps = Vector(
+      Person("GI", "Joe", Male, Location(Vector("sfo", "chi"))),
+      Person("Dane", "Joe", Female, Location(Vector("nyc"))),
+      Person("Baby", "Jane", Female, Location(Vector("lon")))
+    )
+
+    val h =
+      """
+        |<div class="bla">
+        |  <div class="entry">
+        |    <span abc:sex>M</span>
+        |    <h1 abc:name>Max Musterman</h1>
+        |    <div class="location">
+        |      <ul abc:loc>
+        |        <li>ber</li>
+        |        <li>muc</li>
+        |      </ul>
+        |    </div>
+        |  </div>
+        |</div>
+      """.stripMargin
+
+    val li = """<li abc:loc-li>ber</li>"""
+
+    val templateLi = Template(li)
+    def map(p: Person): Map[String, String] = Map(
+      "[abc:sex]" -> p.sex.toString,
+      "[abc:name]" -> (p.fn + " " + p.ln),
+      "[abc:loc]" -> (for {l <- p.locs.city} yield templateLi.fragmentMerge(Map("[abc:loc-li]" -> l))).mkString)
+
+    val result = (for {
+      i <- ps
+      x = map(i)
+      y = Template(h).fragmentMerge(x)
+    } yield y).mkString
 
 
- it should "allow for Block expressions" in {
+    result should include("Dane Joe")
+    result should include("Baby Jane")
+    result should include("chi")
+    result should include("nyc")
+    result should include("lon")
+    result should not include "abc:"
+   }
+
+  it should "allow for Block expressions" in {
    sealed trait Sex
    case object Male extends Sex {
     override def toString = "M"
@@ -123,33 +174,114 @@ class TemplateSpec extends FlatSpec with Matchers {
         |<div class="entry">
         |  <span abc:sex>M</span>
         |  <h1 abc:name>Max Musterman</h1>
-        |  <p class="location" >
-        |   <ul abc:loc>
-        |     <li>ber</li>
-        |     <li>muc</li>
-        |   </ul>
-        |  </p>
+        |  <ul abc:loc>
+        |    <li>ber</li>
+        |    <li>muc</li>
+        |  </ul>
         |</div>
         |
       """.stripMargin
 
-     val li = """<li abc:loc>ber</li>"""
-     val liT = Template(li)
+    val li = """<li abc:loc>ber</li>"""
 
-   val template = Template(h)
-
-   def map(p: Person): Map[String, String] = Map(
+   val templateLi = Template(li)
+    def map(p: Person): Map[String, String] = Map(
      "[abc:sex]" -> p.sex.toString,
      "[abc:name]" -> (p.fn + " "+ p.ln),
-     "[abc:loc]" -> (for {l <- p.locs.city } yield liT.fragmentMerge(Map("[abc:loc]" -> l))).mkString)
+     "[abc:loc]" -> (for {l <- p.locs.city } yield templateLi.fragmentMerge(Map("[abc:loc]" -> l))).mkString)
 
    val result = (for {
       i <- ps
       x = map(i)
-    } yield template.fragmentMerge(x)).mkString
+      y = Template(h).fragmentMerge(x)
+    } yield y).mkString
 
-   result should include("")
+   result should include("Dane Joe")
+   result should include("Baby Jane")
+   result should include("chi")
+   result should include("nyc")
+   result should include("lon")
    result should not include "abc:"
   }
 
+  it should "allow for some form of template and context reuse" in {
+    //This is a contrived example .. templates and contextes should be simple
+    sealed trait Sex
+    case object Male extends Sex {
+      override def toString = "M"
+    }
+    case object Female extends Sex {
+      override def toString = "F"
+    }
+
+    case class Location(city: Vector[String])
+
+    case class Person(fn: String, ln: String, sex: Sex, locs: Location)
+    val ps = Vector(
+      Person("GI", "Joe", Male, Location(Vector("sfo", "chi"))),
+      Person("Dane", "Joe", Female, Location(Vector("nyc"))),
+      Person("Baby", "Jane", Female, Location(Vector("lon")))
+    )
+
+    val container =
+      """
+        |<div class="entry" abc:container>
+        | <span abc:sex>M</span>
+        | <h1 abc:name>Max Musterman</h1>
+        | <div class="location">
+        |  <ul abc:loc>
+        |    <li>ber</li>
+        |    <li>muc</li>
+        |  </ul>
+        | </div>
+        |</div>
+      """.stripMargin
+
+    val mini =
+      """
+        |<span abc:sex>M</span>
+        |<h1 abc:name>Max Musterman</h1>
+      """.stripMargin
+
+
+    val more =
+      """
+        |<div class="location">
+        | <ul abc:loc>
+        |   <li>ber</li>
+        |   <li>muc</li>
+        | </ul>
+        |</div>
+      """.stripMargin
+
+    val li = """<li abc:loc-li>ber</li>"""
+
+    val tc = Template(container)
+    val tmini = Template(mini)
+
+    def miniM(p: Person): Map[String, String] = Map(
+      "[abc:sex]" -> p.sex.toString,
+      "[abc:name]" -> (p.fn + " " + p.ln))
+
+    val tli = Template(li)
+    def moreM(p: Person): Map[String, String] = Map(
+      "[abc:loc]" -> (for {l <- p.locs.city} yield tli.fragmentMerge(Map("[abc:loc-li]" -> l))).mkString)
+
+    val resultMini = (for {
+      i <- ps
+      x = miniM(i)
+      y = Map("[abc:container]" -> tmini.merge(x))
+    } yield tc.fragmentMerge(y)).mkString
+
+    val resultMore = (for {
+      i <- ps
+      tm = Template(mini + more)
+      x = miniM(i) ++ moreM(i)
+      y = Map("[abc:container]" -> tm.merge(x))
+    } yield tc.fragmentMerge(y)).mkString
+
+    resultMini should include("Baby Jane")
+    resultMini should not include "nyc"
+    resultMore should include("nyc")
+  }
 }
