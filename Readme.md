@@ -211,14 +211,14 @@ io.Source.fromFile("some/file").mkString
         |
       """.stripMargin
 
-   val li = """<li abc:loc>ber</li>""" //a sub template
+   val li = """<li abc:loc-li>ber</li>""" //a sub template
 
    // render the sub template as part of the context
    val templateLi = Template(li)
     def map(p: Person): Map[String, String] = Map(
      "[abc:sex]" -> p.sex.toString,
      "[abc:name]" -> (p.fn + " "+ p.ln),
-     "[abc:loc]" -> (for {l <- p.locs.city } yield templateLi.fragmentMerge(Map("[abc:loc]" -> l))).mkString)
+     "[abc:loc]" -> (for {l <- p.locs.city } yield templateLi.fragmentMerge(Map("[abc:loc-li]" -> l))).mkString)
 
    val result = (for {
       i <- ps
