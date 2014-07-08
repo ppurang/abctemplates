@@ -6,7 +6,7 @@ import org.scalatest._
 // Note: we test fragment merges only because for now that validates the underlying merge
 class TemplateSpec extends FlatSpec with Matchers {
 
-  "123 Teamplates" should "allow fragment merge with a single key" in {
+  "ABC Templates" should "allow fragment merge with a single key" in {
     val h =
       """|<div id="content" doh-content>
          |  <p>
@@ -18,6 +18,25 @@ class TemplateSpec extends FlatSpec with Matchers {
     val template = Template(h)
 
     val content = "<p>the real content!</p>"
+    val attribute = "doh-content"
+    val result = template.fragmentMerge(Map("div[doh-content]" -> content))
+
+    result should include(content)
+    result should not include(attribute)
+  }
+
+  it should "allow fragment merge with a single key and line breaks" in {
+    val h =
+      """|<div id="content" doh-content>
+         |  <p>
+         |    some imaginary data for instant visualization in the browser
+         |  </p>
+         |</div>
+      """.stripMargin
+
+    val template = Template(h)
+
+    val content = "<p>the real \n content!</p>"
     val attribute = "doh-content"
     val result = template.fragmentMerge(Map("div[doh-content]" -> content))
 
