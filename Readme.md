@@ -166,7 +166,8 @@ A complete html-template, i.e. a template with `html`, `head` and `body` tags, s
 1. Load from files (this might never end up here) as it is as easy as 
 
 ```scala
-io.Source.fromFile("some/file").mkString
+io.Source.fromFile("some/file").mkString //this isn't correct usage; will leak resources
+                                         //make sure you know how to use io.Source properly 
 ```
 
 2. Performance: We have paid some attention to making the code as fast as possible. We use "static" members where ever possible. Inline stuff. Have a single syntactic `for` on the immutable map. In the end we can't be faster than Jsoup, selection and modification operations.
