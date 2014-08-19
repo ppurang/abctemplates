@@ -2,17 +2,15 @@ package org.purang.net.abctemplates
 
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import scala.util.matching.Regex
 
 class Template(private val contents: String) {
 
   import Template._
 
-
   def fragmentMerge(m: Map[String, String]) : String = {
     val result = merge(m)
     //todo following's ugly as hell
-    stripStuff(BODY, Vector("<body>", "</body>"), contents, stripStuff(HEAD, Vector("<head>", "</head>"), contents, stripStuff(HTML, Vector("<html>", "</html>"), contents, result))).trim()
+    stripStuff(Vector("<body>", "</body>"), contents, stripStuff(Vector("<head>", "</head>"), contents, stripStuff(Vector("<html>", "</html>"), contents, result))).trim()
   }
 
   def merge(m: Map[String, String]) : String = {
@@ -37,17 +35,14 @@ object Template {
   val ATTRIBUTE = "a"
   private val ELAT = """(.*)\[(.*)\]""".r
   private val NS_ATTRIBUTE = """(.*)\[(.*):(.*)\]""".r
-  private val HTML = """(?s).*<html>.*""".r
-  private val HEAD = """(?s).*<head>""".r
-  private val BODY = """(?s).*<body>""".r
 
   private val settings = new Document.OutputSettings().prettyPrint(false)
 
-  @inline private def stripStuff(regex: Regex, vector: Vector[String], contents: String, result: String) = if(regex.findFirstIn(contents).isEmpty) {
-      result.replaceAll(vector(0),"").replaceAll(vector(1), "")
-    } else {
-      result
-    }
+  @inline private def stripStuff(vector: Vector[String], contents: String, result: String) =
+    result.
+      replaceFirst(vector(0), "").
+      replaceFirst("(?s)(.*)" + vector(1), "$1" // this is like replaceLast!
+      )
 
   def apply(s: String) = new Template(s)
 

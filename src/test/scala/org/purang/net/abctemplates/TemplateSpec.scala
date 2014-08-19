@@ -72,13 +72,14 @@ class TemplateSpec extends FlatSpec with Matchers {
 
     val h =
       """
+        |<html>
         |<head>
         |    <link rel="stylesheet" type="text/css" media="print" href="stylesheets/print.css" abc:href/>
         |</head>
         |<body>
-        |  <h1 abc:title>title</h1>
+        |  <h1 abc:title>title </h1>
         |</body>
-        |
+        |</html>
       """.stripMargin
 
     val template = Template(h)
@@ -90,6 +91,12 @@ class TemplateSpec extends FlatSpec with Matchers {
     result should include(s"""href="$href"""")
     result should include(title)
     result should not include "abc:"
+    result should not include "<html>"
+    result should not include "</html>"
+    result should not include "<head>"
+    result should not include "</head>"
+    result should not include "<body>"
+    result should not include "</body>"
   }
 
   it should "allow fragment merges with attribute replacement and inner html replacement" in {
