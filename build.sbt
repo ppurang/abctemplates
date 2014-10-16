@@ -1,18 +1,14 @@
 name := "abctemplates"
 
-version := "0.2.1"
+version := "0.2.2"
 
 organization := "org.purang.net"
 
 scalaVersion := "2.10.4"
 
 libraryDependencies ++= Seq(
-  "org.jsoup" % "jsoup" % "1.7.3" withSources(),
-  "org.scalaz" %% "scalaz-core" % "7.0.6"  withSources(),
-  "org.scalaz" %% "scalaz-concurrent" % "7.0.6"  withSources(),
-  "org.scalacheck" %% "scalacheck" % "1.11.4" % "test",
-  "org.scalatest" %% "scalatest" % "2.1.6" % "test",
-  "com.github.axel22" %% "scalameter" % "0.5-M2" % "test"
+  "org.jsoup" % "jsoup" % "1.8.1" withSources(),
+  "org.scalatest" %% "scalatest" % "2.1.6" % "test"
   )
 
 resolvers ++= Seq(

@@ -2,19 +2,18 @@ package org.purang.net.abctemplates
 
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
+import org.jsoup.parser.Parser
 
 class Template(private val contents: String) {
 
   import Template._
 
   def fragmentMerge(m: Map[String, String]) : String = {
-    val result = merge(m)
-    //todo following's ugly as hell
-    stripStuff(Vector("<body>", "</body>"), contents, stripStuff(Vector("<head>", "</head>"), contents, stripStuff(Vector("<html>", "</html>"), contents, result))).trim()
+    merge(m)
   }
 
   def merge(m: Map[String, String]) : String = {
-    val document = Jsoup.parse(contents)
+    val document = Jsoup.parse(contents, "", Parser.xmlParser())
     document.outputSettings(settings)
     for((k, v) <- m) {
       if(k.startsWith(ATTRIBUTE + ".") ) {
@@ -37,12 +36,6 @@ object Template {
   private val NS_ATTRIBUTE = """(.*)\[(.*):(.*)\]""".r
 
   private val settings = new Document.OutputSettings().prettyPrint(false)
-
-  @inline private def stripStuff(vector: Vector[String], contents: String, result: String) =
-    result.
-      replaceFirst(vector(0), "").
-      replaceFirst("(?s)(.*)" + vector(1), "$1" // this is like replaceLast!
-      )
 
   def apply(s: String) = new Template(s)
 
