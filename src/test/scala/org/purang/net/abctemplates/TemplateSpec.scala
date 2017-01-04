@@ -4,6 +4,7 @@ import org.scalatest._
 
 
 // Note: we test fragment merges only because for now that validates the underlying merge
+@SuppressWarnings(Array("org.wartremover.warts.NonUnitStatements","org.wartremover.warts.ToString"))
 class TemplateSpec extends FlatSpec with Matchers {
 
   "ABC Templates" should "allow fragment merge with a single key" in {

@@ -1,33 +1,55 @@
 name := "abctemplates"
 
-version := "0.2.2"
+version := "0.3.0"
 
 organization := "org.purang.net"
 
-scalaVersion := "2.10.4"
+scalaVersion := "2.11.8"
 
 libraryDependencies ++= Seq(
-  "org.jsoup" % "jsoup" % "1.8.1" withSources(),
-  "org.scalatest" %% "scalatest" % "2.1.6" % "test"
+  "org.jsoup" % "jsoup" % "1.10.2" withSources(),
+  "org.scalatest" %% "scalatest" % "3.0.1" % "test"
   )
 
 resolvers ++= Seq(
   "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots"
 )
 
-scalacOptions ++= Seq("-encoding", "UTF-8", "-deprecation", "-feature", "-unchecked", "-language:_", "-optimize", "-Yinline", "-Yinline-warnings" , "-Ywarn-all")
+scalacOptions in ThisBuild ++= Seq(
+  "-encoding",
+  "UTF-8",
+  "-J-Xss64m",
+  "-deprecation",
+  "-feature",
+  "-unchecked",
+  //"-Xfatal-warnings",
+  "-Xlint",   //"-Yno-predef",
+  "-Yrangepos",
+  "-Yno-adapted-args",
+  "-Ywarn-value-discard",
+  "-Ywarn-adapted-args",
+  "-Ywarn-dead-code",
+  "-Ywarn-inaccessible",
+  "-Ywarn-nullary-override",
+  "-Ywarn-numeric-widen",
+  "-language:implicitConversions",
+  "-language:higherKinds",
+  "-language:existentials",
+  "-optimize",
+  "-Yinline",
+  "-Yinline-warnings"
+)
 
 cancelable := true
 
 fork := true
 
-testFrameworks += new TestFramework(
-    "org.scalameter.ScalaMeterFramework")
-
 logBuffered := false
 
-parallelExecution in Test := false
-
-seq(bintrayPublishSettings:_*)
+parallelExecution in Test := true
 
 licenses += ("BSD", url("http://www.tldrlegal.com/license/bsd-3-clause-license-%28revised%29"))
+
+wartremoverErrors ++= Warts.unsafe
+
+wartremoverWarnings ++= Warts.all

@@ -33,7 +33,7 @@ To achieve simplicity the templates are kept simple but the "merge" requires a b
     )
   
     // merge template with a context
-    val result = template.fragmentMerge(context)
+    val result = template.merge(context)
 
     println(result)
     
@@ -94,7 +94,7 @@ the result is
     val t = Template("""<a href="path/some_level.html" abc:href>link to the next level</a>""")
     val c = Map("a.[abc:href]" -> """real/path/level-01.html""")   //note the 'a.' in the key
     
-    t.mergeFragment(c)
+    t.merge(c)
     
     //results in the 'href' attribute being replaced
     //<a href="real/path/level-01.html">link to the next level</a>
@@ -105,7 +105,7 @@ the result is
     val t = Template("""<a href="path/some_level.html" abc:href>link to the next level</a>""")
     val c = Map("[abc:href]" -> """real/path/level-01.html""")   //note how the 'a.' is missing in the key
     
-    t.mergeFragment(c)
+    t.merge(c)
     
     //results in an unaltered 'href' attribute but the inner html gets replaced
     //<a href="path/some_level.html">real/path/level-01.html</a>
@@ -128,13 +128,6 @@ the result is
     <a href="real/path/level-01.html">
      Go to the first level
     </a>
-
-
-## Unfortunate 
-
-As we use Jsoup we have an issue with html-fragments (html missing all or any of the `html`, `head` and `body` tags). Jsoup tries to clean an html-fragment by adding `html`, `head` and `body` tags when any or all of them is missing.
-
-A complete html-template, i.e. a template with `html`, `head` and `body` tags, should use the `merge` to merge a context with the template. An html-fragment template should use `mergeFragment`.  
 
 
 ## Recommendation
@@ -219,12 +212,12 @@ io.Source.fromFile("some/file").mkString //this isn't correct usage; will leak r
     def map(p: Person): Map[String, String] = Map(
      "[abc:sex]" -> p.sex.toString,
      "[abc:name]" -> (p.fn + " "+ p.ln),
-     "[abc:loc]" -> (for {l <- p.locs.city } yield templateLi.fragmentMerge(Map("[abc:loc-li]" -> l))).mkString)
+     "[abc:loc]" -> (for {l <- p.locs.city } yield templateLi.merge(Map("[abc:loc-li]" -> l))).mkString)
 
    val result = (for {
       i <- ps
       x = map(i)
-      y = Template(h).fragmentMerge(x)
+      y = Template(h).merge(x)
     } yield y).mkString
     
     /* results in:

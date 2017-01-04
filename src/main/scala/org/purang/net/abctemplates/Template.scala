@@ -13,10 +13,9 @@ class Template(private val contents: String) {
   }
 
   def merge(m: Map[String, String]) : String = {
-    val document = Jsoup.parse(contents, "", Parser.xmlParser())
-    document.outputSettings(settings)
-    for((k, v) <- m) {
-      if(k.startsWith(ATTRIBUTE + ".") ) {
+    val document = Jsoup.parse(contents, "", Parser.xmlParser()).outputSettings(settings)
+    m.foreach {
+      case (k, v) => if(k.startsWith(ATTRIBUTE + ".") ) {
         val a = k.replaceFirst(ATTRIBUTE + ".", "")
         val NS_ATTRIBUTE(el, ns, pattr) = a // div[abc:href] => div && abc:href && href
         document.select(a).attr(pattr, v).removeAttr(s"$ns:$pattr")  //select("div[abc:href]").attr("href", "somev").remove("abc:href")
@@ -30,7 +29,7 @@ class Template(private val contents: String) {
 }
 
 object Template {
-  val ELEMENT = "e" // is the defaul hence never really needed
+  val ELEMENT = "e" // is the default hence never really needed
   val ATTRIBUTE = "a"
   private val ELAT = """(.*)\[(.*)\]""".r
   private val NS_ATTRIBUTE = """(.*)\[(.*):(.*)\]""".r
@@ -39,5 +38,5 @@ object Template {
 
   def apply(s: String) = new Template(s)
 
-  def valid(result: String, namespace : String = "abc:")  : Boolean = !result.contains(namespace)
+  def valid(result: String, namespace : String)  : Boolean = !result.contains(namespace)
 }

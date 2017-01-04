@@ -21,7 +21,7 @@ object Main {
     )
 
     // merge template with a context
-    val result = template.fragmentMerge(context)
+    val result = template.merge(context)
 
     println(result)
 
