@@ -14,6 +14,14 @@ To achieve simplicity the templates are kept simple but the "merge" requires a b
 
 ## Quick Start 
 
+Include dependency (for `scala 2.10` use version `0.2.2`)
+
+```scala
+libraryDependencies ++= Seq(
+  "org.purang.net" %% "abctemplates" % "0.3.0" withSources()
+  )
+```
+Usage:
 
 ```scala
     val h = """
