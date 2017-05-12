@@ -4,7 +4,7 @@ version := "0.3.0"
 
 organization := "org.purang.net"
 
-scalaVersion := "2.11.8"
+scalaVersion := "2.12.2"
 
 libraryDependencies ++= Seq(
   "org.jsoup" % "jsoup" % "1.10.2" withSources(),
@@ -35,9 +35,10 @@ scalacOptions in ThisBuild ++= Seq(
   "-language:implicitConversions",
   "-language:higherKinds",
   "-language:existentials",
-  "-optimize",
-  "-Yinline",
-  "-Yinline-warnings"
+  //"-optimize",
+  "-opt:l:classpath"
+  //"-Yinline",
+  //"-Yinline-warnings"
 )
 
 cancelable := true
