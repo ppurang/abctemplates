@@ -14,7 +14,7 @@ To achieve simplicity the templates are kept simple but the "merge" requires a b
 
 ## Quick Start 
 
-Include dependency (for `scala 2.10` use version `0.2.2`). For latest versions check [bintray](https://bintray.com/ppurang/maven/abctemplates)
+Include dependency (for `scala 2.10` use version `0.2.2`).  [![Download](https://api.bintray.com/packages/ppurang/maven/abctemplates/images/download.svg)](https://bintray.com/ppurang/maven/abctemplates/_latestVersion)
 
 ```scala
 libraryDependencies ++= Seq(
