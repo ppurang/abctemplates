@@ -7,11 +7,7 @@ import org.jsoup.parser.Parser
 class Template(private val contents: String) {
 
   import Template._
-
-  def fragmentMerge(m: Map[String, String]) : String = {
-    merge(m)
-  }
-
+  
   def merge(m: Map[String, String]) : String = {
     val document = Jsoup.parse(contents, "", Parser.xmlParser()).outputSettings(settings)
     m.foreach {

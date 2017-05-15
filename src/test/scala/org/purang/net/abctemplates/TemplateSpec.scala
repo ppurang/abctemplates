@@ -20,7 +20,7 @@ class TemplateSpec extends FlatSpec with Matchers {
 
     val content = "<p>the real content!</p>"
     val attribute = "doh-content"
-    val result = template.fragmentMerge(Map("div[doh-content]" -> content))
+    val result = template.merge(Map("div[doh-content]" -> content))
 
     result should include(content)
     result should not include(attribute)
@@ -39,7 +39,7 @@ class TemplateSpec extends FlatSpec with Matchers {
 
     val content = "<p>the real \n content!</p>"
     val attribute = "doh-content"
-    val result = template.fragmentMerge(Map("div[doh-content]" -> content))
+    val result = template.merge(Map("div[doh-content]" -> content))
 
     result should include(content)
     result should not include(attribute)
@@ -62,7 +62,7 @@ class TemplateSpec extends FlatSpec with Matchers {
 
     val title = "altered title"
     val body  = "altered body"
-    val result = template.fragmentMerge(Map("[abc:title]" -> title, "[abc:body]" -> body))
+    val result = template.merge(Map("[abc:title]" -> title, "[abc:body]" -> body))
 
     result should include(title)
     result should include(body)
@@ -81,7 +81,7 @@ class TemplateSpec extends FlatSpec with Matchers {
 
     val href = "stylesheets/print-sgshgshg.css"
     val title  = "altered title"
-    val result = template.fragmentMerge(Map("a.[abc:href]" -> href, "[abc:title]" -> title))
+    val result = template.merge(Map("a.[abc:href]" -> href, "[abc:title]" -> title))
 
     result should include(s"""href="$href"""")
     result should include(title)
@@ -101,7 +101,7 @@ class TemplateSpec extends FlatSpec with Matchers {
 
     val href = "altered-link.txt"
     val text  = "altered text"
-    val result = template.fragmentMerge(Map("a.[abc:href]" -> href, "[abc:link-text]" -> text))
+    val result = template.merge(Map("a.[abc:href]" -> href, "[abc:link-text]" -> text))
 
 
     result should include(s"""href="$href"""")
@@ -149,12 +149,12 @@ class TemplateSpec extends FlatSpec with Matchers {
     def map(p: Person): Map[String, String] = Map(
       "[abc:sex]" -> p.sex.toString,
       "[abc:name]" -> (p.fn + " " + p.ln),
-      "[abc:loc]" -> (for {l <- p.locs.city} yield templateLi.fragmentMerge(Map("[abc:loc-li]" -> l))).mkString)
+      "[abc:loc]" -> (for {l <- p.locs.city} yield templateLi.merge(Map("[abc:loc-li]" -> l))).mkString)
 
     val result = (for {
       i <- ps
       x = map(i)
-      y = Template(h).fragmentMerge(x)
+      y = Template(h).merge(x)
     } yield y).mkString
 
 
@@ -203,12 +203,12 @@ class TemplateSpec extends FlatSpec with Matchers {
     def map(p: Person): Map[String, String] = Map(
      "[abc:sex]" -> p.sex.toString,
      "[abc:name]" -> (p.fn + " "+ p.ln),
-     "[abc:loc]" -> (for {l <- p.locs.city } yield templateLi.fragmentMerge(Map("[abc:loc]" -> l))).mkString)
+     "[abc:loc]" -> (for {l <- p.locs.city } yield templateLi.merge(Map("[abc:loc]" -> l))).mkString)
 
    val result = (for {
       i <- ps
       x = map(i)
-      y = Template(h).fragmentMerge(x)
+      y = Template(h).merge(x)
     } yield y).mkString
 
    result should include("Dane Joe")
@@ -280,20 +280,20 @@ class TemplateSpec extends FlatSpec with Matchers {
 
     val tli = Template(li)
     def moreM(p: Person): Map[String, String] = Map(
-      "[abc:loc]" -> (for {l <- p.locs.city} yield tli.fragmentMerge(Map("[abc:loc-li]" -> l))).mkString)
+      "[abc:loc]" -> (for {l <- p.locs.city} yield tli.merge(Map("[abc:loc-li]" -> l))).mkString)
 
     val resultMini = (for {
       i <- ps
       x = miniM(i)
       y = Map("[abc:container]" -> tmini.merge(x))
-    } yield tc.fragmentMerge(y)).mkString
+    } yield tc.merge(y)).mkString
 
     val resultMore = (for {
       i <- ps
       tm = Template(mini + more)
       x = miniM(i) ++ moreM(i)
       y = Map("[abc:container]" -> tm.merge(x))
-    } yield tc.fragmentMerge(y)).mkString
+    } yield tc.merge(y)).mkString
 
     resultMini should include("Baby Jane")
     resultMini should not include "nyc"
