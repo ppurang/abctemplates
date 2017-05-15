@@ -6,10 +6,12 @@ organization := "org.purang.net"
 
 scalaVersion := "2.12.2"
 
+crossScalaVersions := Seq("2.11.8", "2.12.2")
+
 libraryDependencies ++= Seq(
   "org.jsoup" % "jsoup" % "1.10.2" withSources(),
   "org.scalatest" %% "scalatest" % "3.0.1" % "test"
-  )
+)
 
 resolvers ++= Seq(
   "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots"
@@ -23,7 +25,7 @@ scalacOptions in ThisBuild ++= Seq(
   "-feature",
   "-unchecked",
   //"-Xfatal-warnings",
-  "-Xlint",   //"-Yno-predef",
+  "-Xlint", //"-Yno-predef",
   "-Yrangepos",
   "-Yno-adapted-args",
   "-Ywarn-value-discard",
@@ -34,12 +36,17 @@ scalacOptions in ThisBuild ++= Seq(
   "-Ywarn-numeric-widen",
   "-language:implicitConversions",
   "-language:higherKinds",
-  "-language:existentials",
-  //"-optimize",
-  "-opt:l:classpath"
-  //"-Yinline",
-  //"-Yinline-warnings"
-)
+  "-language:existentials"
+) ++ (CrossVersion.partialVersion(scalaVersion.value) match {
+  case Some((2, p)) if p >= 12 => Seq(
+    "-opt:l:classpath"
+  )
+  case Some((2, 11)) => Seq(
+    "-optimize",
+    "-Yinline",
+    "-Yinline-warnings"
+  )
+})
 
 cancelable := true
 
