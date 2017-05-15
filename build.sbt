@@ -1,6 +1,6 @@
 name := "abctemplates"
 
-version := "0.3.0"
+version := "0.4.0"
 
 organization := "org.purang.net"
 

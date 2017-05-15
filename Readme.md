@@ -14,13 +14,19 @@ To achieve simplicity the templates are kept simple but the "merge" requires a b
 
 ## Quick Start 
 
-Include dependency (for `scala 2.10` use version `0.2.2`)
+Include dependency (for `scala 2.10` use version `0.2.2`). For latest versions check [bintray](https://bintray.com/ppurang/maven/abctemplates)
 
 ```scala
 libraryDependencies ++= Seq(
-  "org.purang.net" %% "abctemplates" % "0.3.0" withSources()
+  "org.purang.net" %% "abctemplates" % "0.4.0" withSources()
   )
 ```
+
+From
+
+    resolvers += "ppurang bintray" at "http://dl.bintray.com/ppurang/maven"
+    
+
 Usage:
 
 ```scala
