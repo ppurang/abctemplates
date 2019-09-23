@@ -1,16 +1,16 @@
 name := "abctemplates"
 
-version := "0.4.1"
+version := "0.4.2"
 
 organization := "org.purang.net"
 
-scalaVersion := "2.12.8"
+scalaVersion := "2.12.10"
 
-crossScalaVersions := Seq("2.11.8", "2.12.2")
+//crossScalaVersions := Seq("2.11.12", "2.12.10", "2.13.1")
 
 libraryDependencies ++= Seq(
-  "org.jsoup" % "jsoup" % "1.11.3" withSources(),
-  "org.scalatest" %% "scalatest" % "3.0.7" % "test"
+  "org.jsoup" % "jsoup" % "1.12.1" withSources(),
+  "org.scalatest" %% "scalatest" % "3.0.8" % "test"
 )
 
 resolvers ++= Seq(
