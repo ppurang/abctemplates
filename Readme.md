@@ -1,35 +1,41 @@
+[![Download](https://api.bintray.com/packages/ppurang/maven/asynch/images/download.svg) ](https://bintray.com/ppurang/maven/asynch/_latestVersion)
+
 # ABC Templates
 
-Simple and unintrusive templates for Scala and perhaps others.
+**Simple and un-intrusive templates for Scala and perhaps others.**
 
 ## Motivation
 
-HTML templates should be unintrusive and simple. Ideally they should also be compilable. `ABC Templates` aims to fulfill the first requirement today and postpones the other for the future. 
+HTML templates should be un-intrusive and simple. Ideally they should also be compilable. `ABC Templates` aims to fulfill the first requirement today and postpones the other for the future. 
 
-Unintrusive templates can be seen in the browser and don't differ a lot from the result of applying actual data (or context) to the template.
+Un-intrusive templates can be seen in the browser and don't differ a lot from the result of applying actual data (or context) to the template.
 
 Simple templates are easy to learn and have very few control structures. 
 
-To achieve simplicity the templates are kept simple but the "merge" requires a bit more work. 
+To achieve simplicity the templates are kept simple, but the "merge" requires a bit more work. 
 
 ## Quick Start 
 
-Include dependency (for `scala 2.10` use version `0.2.2`, `scala 2.12` use `0.4.1`, `scala 2.13` use `0.5.0` ).  [![Download](https://api.bintray.com/packages/ppurang/maven/abctemplates/images/download.svg)](https://bintray.com/ppurang/maven/abctemplates/_latestVersion)
+Include dependency (for `scala 2.10` use version `0.2.2`, `scala 2.12` use `0.4.1`, `scala 2.13` use `0.5.0`). 
 
 ```scala
 libraryDependencies ++= Seq(
-  "org.purang.net" %% "abctemplates" % "0.5.0" withSources()
-  )
+  "org.purang.net" %% "abctemplates" % "3.1.0-M3" withSources()
+)
 ```
 
-From
-
-    resolvers += "ppurang bintray" at "http://dl.bintray.com/ppurang/maven"
-    
-
-Usage:
+available from:
 
 ```scala
+resolvers += "ppurang bintray" at "http://dl.bintray.com/ppurang/maven"
+```
+
+## Usage
+
+Quick and **unsafe**<sup>*</sup> usage - 
+
+```scala
+    import org.purang.templates.abc.unsafe.Template._
     val h = """
               |<div id="content" abc:content>
               |  <p>
@@ -57,51 +63,61 @@ Usage:
     //  </div>
 
 ```
+<sup>__*__</sup> Unsafe api exposes imperative OOP style usage. Things might break unexpectedly. Check **Safe, cats-effect enabled, usage** section right at the end.
 
 
+## Only two things and just those two things 
 
-## Two things only
+Seriously - just 2 things are allowed.
 
-### Replace the inner html of an element. 
+### 1. Replace the inner html of an element. 
 
 Given some markup like 
-    
+```html    
     <div id="content" abc:content>
       <p>some imaginary data for instant visualization in the browser</p>
     </div>
-        
+```        
 upon merging it with the context 
      
+```scala
     Map("div[abc:content]" -> """<p>real data</p>""")
+```
 
 the result is
 
+```html
     <div id="content">
       <p>real data</p>
     </div>
+```
 
-**Note:** We use JSoup element selection semantics. If the `abc:content` is unique then `div[abc:content]` and `[abc:content]` have the same effects. 
+**Note:** We use `JSoup` element selection semantics. If the `abc:content` is unique then `div[abc:content]` and `[abc:content]` have the same effects. 
 
 
-### Replace the contents of an attribute
+### 2. Replace the contents of an attribute
 
 Given some markup like 
-    
+
+```html
     <a href="path/some_level.html" abc:href>
      link to the next level
     </a>
-        
+```        
 upon merging it with the context 
-     
+```scala
     Map("a.[abc:href]" -> """real/path/level-01.html""")
-
+```
 the result is
-
+```html
     <a href="real/path/level-01.html">
      link to the next level
     </a>
+```
 
-**Note:** The distinction between element replacement and attribute replacement is made at the context and not in the template. The prefix `a.` can be read as replace an attribute and not the inner html. Hence the context `Map("a.[abc:href]" -> """real/path/level-01.html""")` is different from ` Map("[abc:href]" -> """real/path/level-01.html""")`: the previous would result in `<a href="real/path/level-01.html">link to the next level</a>` and the later in `<a href="path/some_level.html">real/path/level-01.html</a>`. Here is the distinction as example code blocks:
+**Note:** The distinction between `element replacement` and `attribute replacement` is <ins>made by the `context`</ins> and not in the `template`. 
+
+The prefix `a.` can be read as - replace an attribute and not the inner html. Hence, the context `Map("a.[abc:href]" -> """real/path/level-01.html""")` is different from ` Map("[abc:href]" -> """real/path/level-01.html""")`: the previous would result in `<a href="real/path/level-01.html">link to the next level</a>` and the latter in `<a href="path/some_level.html">real/path/level-01.html</a>`. Here is the distinction as example code blocks:
 
 ``` scala
     import Template._
@@ -128,22 +144,23 @@ the result is
 Of course, you can combine the two
 
 Given some markup like 
-    
+
+```html
     <a href="path/some_level.html" abc:href abc:link-text>
      link to the next level
     </a>
-        
+```
 upon merging it with the context 
-     
+
+```scala
     Map("a.[abc:href]" -> """real/path/level-01.html""", "[abc:link-text]" -> """Go to the first level""")
-
+```
 the result is
-
+```html
     <a href="real/path/level-01.html">
      Go to the first level
     </a>
-
-
+```
 ## Recommendation
 
 1. Use unique ids under the namespace `abc:`
@@ -168,7 +185,7 @@ the result is
 ```
 
 
-## What's missing?
+## What's missing or included?
 
 1. Load from files (this might never end up here) as it is as easy as 
 
@@ -256,3 +273,61 @@ io.Source.fromFile("some/file").mkString //this isn't correct usage; will leak r
        </ul>
     </div>*/
 ```
+
+You can always unleash the entire power of `scala` to accomplish complicated usages like this. Almost anything is possible and things remain simple and yet un-intrusive.
+
+
+## Safe, cats-effect enabled, usage
+
+You can check out  `TemplatesApp` in `test` sources. 
+
+```scala
+import org.purang.templates.abc._
+import org.purang.templates.abc.unsafe.Template._
+import cats.Monad
+import cats.effect.{ExitCode, IO, IOApp}
+import cats.syntax.flatMap._
+import cats.syntax.functor._
+
+object TemplatesApp extends IOApp {
+
+  def prg[F[+_] : Monad](talg: Templates[F]): F[(Result, Boolean)] = {
+    for {
+      t <- talg.template(
+        """|<div id="content" abc:content>
+           |  <p>
+           |    some imaginary data for instant visualization in the browser
+           |  </p>
+           |</div>""".stripMargin)
+      m <- talg.merge(
+        t,
+        Map(
+          ElementPattern(Pattern("abc:content")) -> "<b>What's Up Folks!<b>"
+        )
+      )
+      v <- talg.validate(m, Namespace("abc"))
+    } yield (m, v)
+  }
+
+  def run(args: List[String]): IO[ExitCode] = {
+    (for {
+      t <- prg[IO](JsoupTemplates.default)
+      _ <- IO {
+        println(t)
+      }
+    } yield ()).as(ExitCode.Success)
+  }
+}
+```
+
+Running it results in:
+
+```text
+sbt:abctemplates-ng> test:runMain TemplatesApp
+[warn] multiple main classes detected: run 'show discoveredMainClasses' to see the list
+[info] running (fork) TemplatesApp 
+[info] (Result(<div id="content"><b>What's Up Folks!<b></b></b></div>),true)
+[success] Total time: 1 s, completed Jan 3, 2021, 7:08:23 PM
+sbt:abctemplates-ng>
+```
+

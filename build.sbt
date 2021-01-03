@@ -1,26 +1,30 @@
 name := "abctemplates"
 
-version := "0.5.0"
+version := "3.1.0-M3" //we will follow milestones from scala 3
 
-organization := "org.purang.net"
+organization := "org.purang"
 
-scalaVersion := "2.13.4"
+scalaVersion := "3.0.0-M3"
+
+scalacOptions ++=  Seq(
+    "-encoding",
+    "UTF-8",
+    "-feature",
+    "-unchecked",
+    "-Xfatal-warnings",
+    "-deprecation",
+    "-language:implicitConversions", 
+    "-Ykind-projector"
+  ) 
 
 libraryDependencies ++= Seq(
-  "org.jsoup" % "jsoup" % "1.13.1" withSources(),
-  "org.scalatest" %% "scalatest" % "3.2.2" % "test"
-)
+  "org.jsoup" % "jsoup" % "1.13.1",
+  "org.typelevel" %% "cats-effect" % "3.0.0-M5",
+  "org.scalameta" %% "munit" % "0.7.20"  % Test
+).map(_ withSources ())
 
-cancelable := true
+testFrameworks += new TestFramework("munit.Framework")
 
-fork := true
-
-logBuffered := false
-
-parallelExecution in Test := true
-
-licenses += ("BSD", url("http://www.tldrlegal.com/license/bsd-3-clause-license-%28revised%29"))
-
-wartremoverErrors ++= Warts.unsafe
-
-wartremoverWarnings ++= Warts.all
+licenses += ("BSD", url(
+  "http://www.tldrlegal.com/license/bsd-3-clause-license-%28revised%29"
+))

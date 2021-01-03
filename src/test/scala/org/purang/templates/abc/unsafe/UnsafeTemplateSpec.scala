@@ -1,15 +1,10 @@
-package org.purang.net.abctemplates
+package org.purang.templates.abc.unsafe
 
-import org.scalatest.flatspec.AnyFlatSpec
-import org.scalatest.matchers.should.Matchers
+import org.purang.templates.abc.unsafe._
 
-
-// Note: we test fragment merges only because for now that validates the underlying merge
-@SuppressWarnings(Array("org.wartremover.warts.NonUnitStatements","org.wartremover.warts.ToString"))
-class TemplateSpec extends AnyFlatSpec with Matchers
-{
-
-  "ABC Templates" should "allow fragment merge with a single key" in {
+class UnsafeTemplateSpec extends munit.FunSuite {
+  
+  test("allow fragment merge with a single key") {
     val h: String =
       """|<div id="content" doh-content>
          |  <p>
@@ -18,17 +13,17 @@ class TemplateSpec extends AnyFlatSpec with Matchers
          |</div>
       """.stripMargin
 
-    val template: Template = Template(h)
+    val template = Template(h)
 
     val content: String = "<p>the real content!</p>"
     val attribute: String = "doh-content"
     val result: String = template.merge(Map("div[doh-content]" -> content))
 
-    result should include(content)
-    result should not include(attribute)
+    assert(result.contains(content))
+    assert(!result.contains(attribute))
   }
 
-  it should "allow fragment merge with a single key and line breaks" in {
+  test("allow fragment merge with a single key and line breaks") {
     val h: String =
       """|<div id="content" doh-content>
          |  <p>
@@ -37,17 +32,17 @@ class TemplateSpec extends AnyFlatSpec with Matchers
          |</div>
       """.stripMargin
 
-    val template: Template = Template(h)
+    val template = Template(h)
 
     val content: String = "<p>the real \n content!</p>"
     val attribute: String = "doh-content"
     val result: String = template.merge(Map("div[doh-content]" -> content))
 
-    result should include(content)
-    result should not include(attribute)
+    assert(result.contains(content))
+    assert(!result.contains(attribute))
   }
 
-  it should "allow fragment merges with multiple keys" in {
+  test("allow fragment merges with multiple keys") {
 
     val h: String =
       """
@@ -60,18 +55,19 @@ class TemplateSpec extends AnyFlatSpec with Matchers
         |
       """.stripMargin
 
-    val template: Template = Template(h)
+    val template = Template(h)
 
     val title: String = "altered title"
     val body: String = "altered body"
-    val result: String = template.merge(Map("[abc:title]" -> title, "[abc:body]" -> body))
+    val result: String =
+      template.merge(Map("[abc:title]" -> title, "[abc:body]" -> body))
 
-    result should include(title)
-    result should include(body)
-    result should not include("abc:")
+    assert(result.contains(title))
+    assert(result.contains(body))
+    assert(!result.contains("abc:"))
   }
 
-  it should "allow fragment merges with attribute replacement" in {
+  test("allow fragment merges with attribute replacement") {
 
     val h: String =
       """
@@ -79,18 +75,19 @@ class TemplateSpec extends AnyFlatSpec with Matchers
         |  <h1 abc:title>title </h1>
       """.stripMargin
 
-    val template: Template = Template(h)
+    val template = Template(h)
 
     val href: String = "stylesheets/print-sgshgshg.css"
     val title: String = "altered title"
-    val result: String = template.merge(Map("a.[abc:href]" -> href, "[abc:title]" -> title))
+    val result: String =
+      template.merge(Map("a.[abc:href]" -> href, "[abc:title]" -> title))
 
-    result should include(s"""href="$href"""")
-    result should include(title)
-    result should not include "abc:"
+    assert(result.contains(s"""href="$href""""))
+    assert(result.contains(title))
+    assert(!result.contains("abc:"))
   }
 
-  it should "allow fragment merges with attribute replacement and inner html replacement" in {
+  test("allow fragment merges with attribute replacement and inner html replacement") {
 
     val h: String =
       """
@@ -99,19 +96,19 @@ class TemplateSpec extends AnyFlatSpec with Matchers
         |</a>
       """.stripMargin
 
-    val template: Template = Template(h)
+    val template = Template(h)
 
     val href: String = "altered-link.txt"
     val text: String = "altered text"
-    val result: String = template.merge(Map("a.[abc:href]" -> href, "[abc:link-text]" -> text))
+    val result: String =
+      template.merge(Map("a.[abc:href]" -> href, "[abc:link-text]" -> text))
 
-
-    result should include(s"""href="$href"""")
-    result should include(text)
-    result should not include "abc:"
+    assert(result.contains(s"""href="$href""""))
+    assert(result.contains(text))
+    assert(!result.contains("abc:"))
   }
 
-  it should "allow for Nested expressions" in {
+  test("allow for Nested expressions") {
     sealed trait Sex
     case object Male extends Sex {
       override def toString = "M"
@@ -147,11 +144,14 @@ class TemplateSpec extends AnyFlatSpec with Matchers
 
     val li: String = """<li abc:loc-li>ber</li>"""
 
-    val templateLi: Template = Template(li)
+    val templateLi = Template(li)
     def map(p: Person): Map[String, String] = Map(
       "[abc:sex]" -> p.sex.toString,
       "[abc:name]" -> (p.fn + " " + p.ln),
-      "[abc:loc]" -> (for {l <- p.locs.city} yield templateLi.merge(Map("[abc:loc-li]" -> l))).mkString)
+      "[abc:loc]" -> (for { l <- p.locs.city } yield templateLi.merge(
+        Map("[abc:loc-li]" -> l)
+      )).mkString
+    )
 
     val result: String = (for {
       i <- ps
@@ -159,32 +159,31 @@ class TemplateSpec extends AnyFlatSpec with Matchers
       y = Template(h).merge(x)
     } yield y).mkString
 
+    assert(result.contains("Dane Joe"))
+    assert(result.contains("Baby Jane"))
+    assert(result.contains("chi"))
+    assert(result.contains("nyc"))
+    assert(result.contains("lon"))
+    assert(!result.contains("abc:"))
+  }
 
-    result should include("Dane Joe")
-    result should include("Baby Jane")
-    result should include("chi")
-    result should include("nyc")
-    result should include("lon")
-    result should not include "abc:"
-   }
+  test("allow for Block expressions") {
+    sealed trait Sex
+    case object Male extends Sex {
+      override def toString = "M"
+    }
+    case object Female extends Sex {
+      override def toString = "F"
+    }
 
-  it should "allow for Block expressions" in {
-   sealed trait Sex
-   case object Male extends Sex {
-    override def toString = "M"
-   }
-   case object Female extends Sex {
-     override def toString = "F"
-   }
+    case class Location(city: Vector[String])
 
-   case class Location(city: Vector[String])
-
-   case class Person(fn: String, ln: String, sex: Sex, locs: Location)
-   val ps: Vector[Person] = Vector(
-    Person("GI","Joe", Male, Location(Vector("sfo", "chi"))),
-    Person("Dane","Joe", Female, Location(Vector("nyc"))),
-    Person("Baby","Jane", Female, Location(Vector("lon")))
-   )
+    case class Person(fn: String, ln: String, sex: Sex, locs: Location)
+    val ps: Vector[Person] = Vector(
+      Person("GI", "Joe", Male, Location(Vector("sfo", "chi"))),
+      Person("Dane", "Joe", Female, Location(Vector("nyc"))),
+      Person("Baby", "Jane", Female, Location(Vector("lon")))
+    )
 
     val h: String =
       """
@@ -201,27 +200,30 @@ class TemplateSpec extends AnyFlatSpec with Matchers
 
     val li: String = """<li abc:loc>ber</li>"""
 
-   val templateLi: Template = Template(li)
+    val templateLi = Template(li)
     def map(p: Person): Map[String, String] = Map(
-     "[abc:sex]" -> p.sex.toString,
-     "[abc:name]" -> (p.fn + " "+ p.ln),
-     "[abc:loc]" -> (for {l <- p.locs.city } yield templateLi.merge(Map("[abc:loc]" -> l))).mkString)
+      "[abc:sex]" -> p.sex.toString,
+      "[abc:name]" -> (p.fn + " " + p.ln),
+      "[abc:loc]" -> (for { l <- p.locs.city } yield templateLi.merge(
+        Map("[abc:loc]" -> l)
+      )).mkString
+    )
 
-   val result: String = (for {
+    val result: String = (for {
       i <- ps
       x = map(i)
       y = Template(h).merge(x)
     } yield y).mkString
 
-   result should include("Dane Joe")
-   result should include("Baby Jane")
-   result should include("chi")
-   result should include("nyc")
-   result should include("lon")
-   result should not include "abc:"
+    assert(result.contains("Dane Joe"))
+    assert(result.contains("Baby Jane"))
+    assert(result.contains("chi"))
+    assert(result.contains("nyc"))
+    assert(result.contains("lon"))
+    assert(!result.contains("abc:"))
   }
 
-  it should "allow for some form of template and context reuse" in {
+  test("allow for some form of template and context reuse") {
     //This is a contrived example .. templates and contextes should be simple
     sealed trait Sex
     case object Male extends Sex {
@@ -260,7 +262,6 @@ class TemplateSpec extends AnyFlatSpec with Matchers
         |<h1 abc:name>Max Musterman</h1>
       """.stripMargin
 
-
     val more: String =
       """
         |<div class="location">
@@ -273,16 +274,16 @@ class TemplateSpec extends AnyFlatSpec with Matchers
 
     val li: String = """<li abc:loc-li>ber</li>"""
 
-    val tc: Template = Template(container)
-    val tmini: Template = Template(mini)
+    val tc = Template(container)
+    val tmini = Template(mini)
 
-    def miniM(p: Person): Map[String, String] = Map(
-      "[abc:sex]" -> p.sex.toString,
-      "[abc:name]" -> (p.fn + " " + p.ln))
+    def miniM(p: Person): Map[String, String] =
+      Map("[abc:sex]" -> p.sex.toString, "[abc:name]" -> (p.fn + " " + p.ln))
 
-    val tli: Template = Template(li)
-    def moreM(p: Person): Map[String, String] = Map(
-      "[abc:loc]" -> (for {l <- p.locs.city} yield tli.merge(Map("[abc:loc-li]" -> l))).mkString)
+    val tli = Template(li)
+    def moreM(p: Person): Map[String, String] = Map("[abc:loc]" -> (for {
+      l <- p.locs.city
+    } yield tli.merge(Map("[abc:loc-li]" -> l))).mkString)
 
     val resultMini: String = (for {
       i <- ps
@@ -297,8 +298,8 @@ class TemplateSpec extends AnyFlatSpec with Matchers
       y = Map("[abc:container]" -> tm.merge(x))
     } yield tc.merge(y)).mkString
 
-    resultMini should include("Baby Jane")
-    resultMini should not include "nyc"
-    resultMore should include("nyc")
+    assert(resultMini.contains("Baby Jane"))
+    assert(!resultMini.contains("chi"))
+    assert(resultMore.contains("nyc"))
   }
 }
