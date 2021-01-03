@@ -1,11 +1,13 @@
 package org.purang.net.abctemplates
 
-import org.scalatest._
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
 
 // Note: we test fragment merges only because for now that validates the underlying merge
 @SuppressWarnings(Array("org.wartremover.warts.NonUnitStatements","org.wartremover.warts.ToString"))
-class TemplateSpec extends FlatSpec with Matchers {
+class TemplateSpec extends AnyFlatSpec with Matchers
+{
 
   "ABC Templates" should "allow fragment merge with a single key" in {
     val h: String =
