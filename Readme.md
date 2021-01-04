@@ -1,4 +1,4 @@
-[![Download](https://api.bintray.com/packages/ppurang/maven/asynch/images/download.svg) ](https://bintray.com/ppurang/maven/asynch/_latestVersion)
+[![Download](https://api.bintray.com/packages/ppurang/maven/abctemplates/images/download.svg) ](https://bintray.com/ppurang/maven/abctemplates/_latestVersion)
 
 # ABC Templates
 
