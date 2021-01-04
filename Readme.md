@@ -63,7 +63,7 @@ Quick and **unsafe**<sup>*</sup> usage -
     //  </div>
 
 ```
-<sup>__*__</sup> Unsafe api exposes imperative OOP style usage. Things might break unexpectedly. Check **Safe, cats-effect enabled, usage** section right at the end.
+<sup>__*__</sup> Unsafe api exposes imperative OOP style usage. Things might break unexpectedly. Check **[Safe, cats-effect enabled, usage](#safe-cats-effect-enabled-usage)** section right at the end.
 
 
 ## Only two things and just those two things 
@@ -119,7 +119,7 @@ the result is
 
 The prefix `a.` can be read as - replace an attribute and not the inner html. Hence, the context `Map("a.[abc:href]" -> """real/path/level-01.html""")` is different from ` Map("[abc:href]" -> """real/path/level-01.html""")`: the previous would result in `<a href="real/path/level-01.html">link to the next level</a>` and the latter in `<a href="path/some_level.html">real/path/level-01.html</a>`. Here is the distinction as example code blocks:
 
-``` scala
+```scala
     import Template._
     val t = Template("""<a href="path/some_level.html" abc:href>link to the next level</a>""")
     val c = Map("a.[abc:href]" -> """real/path/level-01.html""")   //note the 'a.' in the key
@@ -130,7 +130,7 @@ The prefix `a.` can be read as - replace an attribute and not the inner html. He
     //<a href="real/path/level-01.html">link to the next level</a>
 ```
 
-``` scala
+```scala
     import Template._
     val t = Template("""<a href="path/some_level.html" abc:href>link to the next level</a>""")
     val c = Map("[abc:href]" -> """real/path/level-01.html""")   //note how the 'a.' is missing in the key
@@ -153,7 +153,10 @@ Given some markup like
 upon merging it with the context 
 
 ```scala
-    Map("a.[abc:href]" -> """real/path/level-01.html""", "[abc:link-text]" -> """Go to the first level""")
+    Map(
+        "a.[abc:href]" -> """real/path/level-01.html""", 
+        "[abc:link-text]" -> """Go to the first level"""
+    )
 ```
 the result is
 ```html
@@ -161,6 +164,9 @@ the result is
      Go to the first level
     </a>
 ```
+
+For advanced usages check out the section **[Advanced Usage](#advanced-usage)** below. 
+
 ## Recommendation
 
 1. Use unique ids under the namespace `abc:`
@@ -170,7 +176,6 @@ the result is
 3. Validate the result. It is as easy as 
 
 ```scala 
-   
    import Template._
    
    val result = ...
@@ -180,8 +185,9 @@ the result is
    valid(result, "abc___:")  
    
    
-   // choosing "abc___" as prefix should be ok see http://www.w3.org/TR/REC-xml-names/#NT-Prefix and http://www.w3.org/TR/REC-xml/#NT-Name
-
+   // choosing "abc___" as prefix should be ok
+   // see http://www.w3.org/TR/REC-xml-names/#NT-Prefix 
+   // and http://www.w3.org/TR/REC-xml/#NT-Name
 ```
 
 
@@ -203,7 +209,6 @@ io.Source.fromFile("some/file").mkString //this isn't correct usage; will leak r
 1. Collections:
  
 ```scala
-
    sealed trait Sex
    case object Male extends Sex {
     override def toString = "M"
