@@ -223,83 +223,38 @@ class UnsafeTemplateSpec extends munit.FunSuite {
     assert(!result.contains("abc:"))
   }
 
-  test("allow for some form of template and context reuse") {
-    //This is a contrived example .. templates and contextes should be simple
-    sealed trait Sex
-    case object Male extends Sex {
-      override def toString = "M"
-    }
-    case object Female extends Sex {
-      override def toString = "F"
-    }
-
-    case class Location(city: Vector[String])
-
-    case class Person(fn: String, ln: String, sex: Sex, locs: Location)
-    val ps: Vector[Person] = Vector(
-      Person("GI", "Joe", Male, Location(Vector("sfo", "chi"))),
-      Person("Dane", "Joe", Female, Location(Vector("nyc"))),
-      Person("Baby", "Jane", Female, Location(Vector("lon")))
-    )
-
+  test("allow using embedded templates") {
     val container: String =
       """
         |<div class="entry" abc:container>
         | <span abc:sex>M</span>
         | <h1 abc:name>Max Musterman</h1>
-        | <div class="location">
-        |  <ul abc:loc>
-        |    <li>ber</li>
+        | <div abc:loc class="location">
+        |  <ul>
+        |    <li abc:loc-li>ber</li>
         |    <li>muc</li>
         |  </ul>
         | </div>
         |</div>
       """.stripMargin
-
-    val mini: String =
-      """
-        |<span abc:sex>M</span>
-        |<h1 abc:name>Max Musterman</h1>
-      """.stripMargin
-
-    val more: String =
-      """
-        |<div class="location">
-        | <ul abc:loc>
-        |   <li>ber</li>
-        |   <li>muc</li>
-        | </ul>
-        |</div>
-      """.stripMargin
-
-    val li: String = """<li abc:loc-li>ber</li>"""
-
+    
     val tc = Template(container)
-    val tmini = Template(mini)
-
-    def miniM(p: Person): Map[String, String] =
-      Map("[abc:sex]" -> p.sex.toString, "[abc:name]" -> (p.fn + " " + p.ln))
-
-    val tli = Template(li)
-    def moreM(p: Person): Map[String, String] = Map("[abc:loc]" -> (for {
-      l <- p.locs.city
-    } yield tli.merge(Map("[abc:loc-li]" -> l))).mkString)
-
-    val resultMini: String = (for {
-      i <- ps
-      x = miniM(i)
-      y = Map("[abc:container]" -> tmini.merge(x))
-    } yield tc.merge(y)).mkString
-
-    val resultMore: String = (for {
-      i <- ps
-      tm = Template(mini + more)
-      x = miniM(i) ++ moreM(i)
-      y = Map("[abc:container]" -> tm.merge(x))
-    } yield tc.merge(y)).mkString
-
-    assert(resultMini.contains("Baby Jane"))
-    assert(!resultMini.contains("chi"))
-    assert(resultMore.contains("nyc"))
+    
+    assertEquals(tc.embeddedTemplate("[abc:loc]"), Some(
+    """|<div abc:loc class="location">
+       |  <ul>
+       |    <li abc:loc-li>ber</li>
+       |    <li>muc</li>
+       |  </ul>
+       | </div>""".stripMargin))
+    assertEquals(
+      tc.embeddedTemplate("[abc:loc-li]"), 
+      Some("""<li abc:loc-li>ber</li>""")
+    )
+    assertEquals(
+      tc.embeddedTemplates(List("[abc:sex]", "[abc:name]")), 
+      Some("""<span abc:sex>M</span><h1 abc:name>Max Musterman</h1>""")
+    )
   }
+
 }

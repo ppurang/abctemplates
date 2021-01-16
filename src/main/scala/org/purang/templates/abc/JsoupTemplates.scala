@@ -17,9 +17,18 @@ object JsoupTemplates {
         (a.toString(), b)
       }))
     }
+    
+    override def embeddedTemplate(template: Template, cssQuery: String): F[Option[Template]] = F.catchNonFatal {
+      UnsafeTemplate(template.c).embeddedTemplate(cssQuery).map(Template(_))
+    }
+
+    override def embeddedTemplates(template: Template, cssQueries: List[String]): F[Option[Template]] = F.catchNonFatal {
+      UnsafeTemplate(template.c).embeddedTemplates(cssQueries).map(Template(_))
+    }
 
     override def validate(result: Result, ns: Namespace): F[Boolean] =
       F.catchNonFatal(UnsafeTemplate.valid(result.r, ns.ns))
+      
   }
 }
 
