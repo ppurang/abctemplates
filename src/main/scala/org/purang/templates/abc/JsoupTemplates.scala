@@ -17,6 +17,11 @@ object JsoupTemplates {
         (a.toString(), b)
       }))
     }
+
+    override def mergeSimple(template: Template,
+              context: => Map[String, String]): F[Result] =  F.catchNonFatal {
+      Result(UnsafeTemplate(template.c).merge(context))
+    }
     
     override def embeddedTemplate(template: Template, cssQuery: String): F[Option[Template]] = F.catchNonFatal {
       UnsafeTemplate(template.c).embeddedTemplate(cssQuery).map(Template(_))

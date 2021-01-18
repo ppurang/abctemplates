@@ -8,6 +8,9 @@ trait Templates[+F[+_]] {
   def merge(template: Template,
             context: => Map[SubstitutionPattern, String]): F[Result]
 
+  def mergeSimple(template: Template,
+            context: => Map[String, String]): F[Result]
+
   def embeddedTemplate(template: Template, cssQuery: String): F[Option[Template]]
   
   def embeddedTemplates(template: Template, cssQueries: List[String]): F[Option[Template]]
