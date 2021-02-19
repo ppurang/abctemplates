@@ -8,7 +8,7 @@ scalaVersion := "2.13.4"
 
 libraryDependencies ++= Seq(
   "org.jsoup" % "jsoup" % "1.13.1" withSources(),
-  "org.scalatest" %% "scalatest" % "3.2.4" % "test"
+  "org.scalatest" %% "scalatest" % "3.2.5" % "test"
 )
 
 cancelable := true
