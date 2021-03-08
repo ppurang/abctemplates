@@ -4,7 +4,7 @@ version := "3.1.0-RC1" //we will follow milestones from scala 3
 
 organization := "org.purang"
 
-scalaVersion := "3.0.0-M3"
+scalaVersion := "3.0.0-RC1"
 
 scalacOptions ++=  Seq(
     "-encoding",
