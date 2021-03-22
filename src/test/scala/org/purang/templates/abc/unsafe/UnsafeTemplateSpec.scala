@@ -3,7 +3,7 @@ package org.purang.templates.abc.unsafe
 import org.purang.templates.abc.unsafe._
 
 class UnsafeTemplateSpec extends munit.FunSuite {
-  
+
   test("allow fragment merge with a single key") {
     val h: String =
       """|<div id="content" doh-content>
@@ -87,7 +87,9 @@ class UnsafeTemplateSpec extends munit.FunSuite {
     assert(!result.contains("abc:"))
   }
 
-  test("allow fragment merges with attribute replacement and inner html replacement") {
+  test(
+    "allow fragment merges with attribute replacement and inner html replacement"
+  ) {
 
     val h: String =
       """
@@ -237,22 +239,24 @@ class UnsafeTemplateSpec extends munit.FunSuite {
         | </div>
         |</div>
       """.stripMargin
-    
+
     val tc = Template(container)
-    
-    assertEquals(tc.embeddedTemplate("[abc:loc]"), Some(
-    """|<div abc:loc class="location">
+
+    assertEquals(
+      tc.embeddedTemplate("[abc:loc]"),
+      Some("""|<div abc:loc class="location">
        |  <ul>
        |    <li abc:loc-li>ber</li>
        |    <li>muc</li>
        |  </ul>
-       | </div>""".stripMargin))
+       | </div>""".stripMargin)
+    )
     assertEquals(
-      tc.embeddedTemplate("[abc:loc-li]"), 
+      tc.embeddedTemplate("[abc:loc-li]"),
       Some("""<li abc:loc-li>ber</li>""")
     )
     assertEquals(
-      tc.embeddedTemplates(List("[abc:sex]", "[abc:name]")), 
+      tc.embeddedTemplates(List("[abc:sex]", "[abc:name]")),
       Some("""<span abc:sex>M</span><h1 abc:name>Max Musterman</h1>""")
     )
   }

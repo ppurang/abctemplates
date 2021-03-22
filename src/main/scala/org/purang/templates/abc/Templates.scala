@@ -5,18 +5,27 @@ import cats._
 trait Templates[+F[+_]] {
   def template[A](contents: String): F[Template]
 
-  def merge(template: Template,
-            context: => Map[SubstitutionPattern, String]): F[Result]
+  def merge(
+      template: Template,
+      context: => Map[SubstitutionPattern, String]
+  ): F[Result]
 
-  def mergeSimple(template: Template,
-            context: => Map[String, String]): F[Result]
+  def mergeSimple(
+      template: Template,
+      context: => Map[String, String]
+  ): F[Result]
 
-  def embeddedTemplate(template: Template, cssQuery: String): F[Option[Template]]
-  
-  def embeddedTemplates(template: Template, cssQueries: List[String]): F[Option[Template]]
+  def embeddedTemplate(
+      template: Template,
+      cssQuery: String
+  ): F[Option[Template]]
 
-  def validate(result: Result,
-               ns: Namespace): F[Boolean]
+  def embeddedTemplates(
+      template: Template,
+      cssQueries: List[String]
+  ): F[Option[Template]]
+
+  def validate(result: Result, ns: Namespace): F[Boolean]
 }
 
 //A thought, hold it!
@@ -29,9 +38,3 @@ trait Templates[+F[+_]] {
 //  def validate(result: Result,
 //               ns: Namespace): F[E, Boolean]
 //}
-
-
-
-
-
-

@@ -10,12 +10,13 @@ import cats.syntax.all._
 import cats.Monoid.combineAll
 import cats.implicits._
 
-class Template private[unsafe](private val contents: String) {
+class Template private[unsafe] (private val contents: String) {
 
   import Template._
-  
+
   def merge(m: Map[String, String]): String = {
-    val document: Document = Jsoup.parse(contents, "", Parser.xmlParser()).outputSettings(settings)
+    val document: Document =
+      Jsoup.parse(contents, "", Parser.xmlParser()).outputSettings(settings)
     m.foreach { case (k, v) =>
       if (k.startsWith(ATTRIBUTE + ".")) {
         val a: String = k.replaceFirst(ATTRIBUTE + ".", "")
@@ -36,9 +37,10 @@ class Template private[unsafe](private val contents: String) {
   }
 
   def embeddedTemplate(cssQuery: String): Option[String] = {
-    Either.catchNonFatal{
+    Either.catchNonFatal {
       //todo too many documents initialized for #embeddedTemplates
-      val document: Document = Jsoup.parse(contents, "", Parser.xmlParser()).outputSettings(settings)
+      val document: Document =
+        Jsoup.parse(contents, "", Parser.xmlParser()).outputSettings(settings)
       document.select(cssQuery).first().outerHtml()
     }.toOption
   }
