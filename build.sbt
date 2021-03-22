@@ -1,12 +1,12 @@
-name := "abctemplates"
+ThisBuild / name := "abctemplates"
 
-version := "3.1.0-RC3" //we will follow milestones from scala effect 3
+ThisBuild / version := "3.1.0-RC3" //we will follow milestones from scala effect 3
 
-organization := "org.purang.templates"
+ThisBuild / organization := "org.purang.templates"
 
-scalaVersion := "3.0.0-RC1"
+ThisBuild / scalaVersion := "3.0.0-RC1"
 
-scalacOptions ++= Seq(
+ThisBuild / scalacOptions ++= Seq(
   "-encoding",
   "UTF-8",
   "-feature",
@@ -17,14 +17,20 @@ scalacOptions ++= Seq(
   "-Ykind-projector"
 )
 
-libraryDependencies ++= Seq(
+ThisBuild / libraryDependencies ++= Seq(
   "org.jsoup" % "jsoup" % "1.13.1",
   "org.typelevel" %% "cats-effect" % "3.0.0-RC3",
   "org.scalameta" %% "munit" % "0.7.22"  % Test
 ).map(_ withSources ())
 
-testFrameworks += new TestFramework("munit.Framework")
+ThisBuild / testFrameworks += new TestFramework("munit.Framework")
 
-licenses += ("BSD", url(
+ThisBuild / licenses += ("BSD", url(
   "http://www.tldrlegal.com/license/bsd-3-clause-license-%28revised%29"
 ))
+
+This / sources in (sbt.Compile, doc) := Seq()
+ThisBuild / publishArtifact in packageSrc := true
+ThisBuild / publishArtifact in packageSrc in Test := false
+
+publishTo := sonatypePublishToBundle.value
