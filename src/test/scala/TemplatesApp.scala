@@ -7,10 +7,9 @@ import cats.syntax.functor._
 
 object TemplatesApp extends IOApp {
 
-  def prg[F[+_] : Monad](talg: Templates[F]): F[(Result, Boolean)] = {
+  def prg[F[+_]: Monad](talg: Templates[F]): F[(Result, Boolean)] = {
     for {
-      t <- talg.template(
-        """|<div id="content" abc:content>
+      t <- talg.template("""|<div id="content" abc:content>
            |  <p>
            |    some imaginary data for instant visualization in the browser
            |  </p>
