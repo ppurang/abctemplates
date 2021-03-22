@@ -1,4 +1,7 @@
-[![Download](https://api.bintray.com/packages/ppurang/maven/abctemplates/images/download.svg) ](https://bintray.com/ppurang/maven/abctemplates/_latestVersion)
+[![Build Status](https://travis-ci.com/ppurang/abctemplates.svg?branch=scala3)](
+https://travis-ci.com/ppurang/abctemplates)
+
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.purang.templates/abctemplates_3.0.0-RC1/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.purang.templates/abctemplates_3.0.0-RC1/badge.svg)
 
 # ABC Templates
 
@@ -16,19 +19,20 @@ To achieve simplicity the templates are kept simple, but the "merge" requires a 
 
 ## Quick Start 
 
-Include dependency (for `scala 2.10` use version `0.2.2`, `scala 2.12` use `0.4.1`, `scala 2.13` use `0.5.0`). 
+For cats-effect based usage check [Safe, cats-effect enabled, usage](#safe-cats-effect-enabled-usage) 
+
+## Version
+
+For latest version check the maven badge above. 
+For other versions check: https://search.maven.org/search?q=org.purang.templates  or https://repo1.maven.org/maven2/org/purang/templates
 
 ```scala
-libraryDependencies ++= Seq(
-  "org.purang.net" %% "abctemplates" % "3.1.0-M3" withSources()
-)
+    libraryDependencies += "org.purang.templates" %% "abctemplates" % "3.0.0-RC3"
 ```
 
-available from:
+Previous versions were published to bintray. Bintray has been sunset and hence we have lost the old version. 
 
-```scala
-resolvers += "ppurang bintray" at "http://dl.bintray.com/ppurang/maven"
-```
+If you'd like an older version then get in touch, and we'll try to work out something. 
 
 ## Usage
 
@@ -64,7 +68,6 @@ Quick and **unsafe**<sup>*</sup> usage -
 
 ```
 <sup>__*__</sup> Unsafe api exposes imperative OOP style usage. Things might break unexpectedly. Check **[Safe, cats-effect enabled, usage](#safe-cats-effect-enabled-usage)** section right at the end.
-
 
 ## Only two things and just those two things 
 
@@ -190,7 +193,6 @@ For advanced usages check out the section **[Advanced Usage](#advanced-usage)** 
    // and http://www.w3.org/TR/REC-xml/#NT-Name
 ```
 
-
 ## What's missing or included?
 
 1. Load from files (this might never end up here) as it is as easy as 
@@ -202,9 +204,7 @@ io.Source.fromFile("some/file").mkString //this isn't correct usage; will leak r
 
 2. Performance: We have paid some attention to making the code as fast as possible. We use "static" members where ever possible. Inline stuff. Have a single syntactic `for` on the immutable map. In the end we can't be faster than Jsoup, selection and modification operations.
 
-
 ## Advanced Usage 
-
 
 1. Collections:
  
@@ -280,7 +280,6 @@ io.Source.fromFile("some/file").mkString //this isn't correct usage; will leak r
 ```
 
 You can always unleash the entire power of `scala` to accomplish complicated usages like this. Almost anything is possible and things remain simple and yet un-intrusive.
-
 
 ## Safe, cats-effect enabled, usage
 
