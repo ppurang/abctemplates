@@ -17,7 +17,7 @@ object JsoupTemplates {
           context: => Map[SubstitutionPattern, String]
       ): F[Result] = F.catchNonFatal {
         Result(UnsafeTemplate(template.c).merge(context.map { case (a, b) =>
-          (a.toString(), b)
+          (a.toString, b)
         }))
       }
 

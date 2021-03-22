@@ -53,8 +53,8 @@ class Template private[unsafe] (private val contents: String) {
 
 object Template {
   val ATTRIBUTE: String = "a"
-  private val ELAT: Regex = """(.*)\[(.*)\]""".r
-  private val NS_ATTRIBUTE: Regex = """(.*)\[(.*):(.*)\]""".r
+  private val ELAT: Regex = """(.*)\[(.*)]""".r
+  private val NS_ATTRIBUTE: Regex = """(.*)\[(.*):(.*)]""".r
 
   private val settings: Document.OutputSettings =
     new Document.OutputSettings().prettyPrint(false)

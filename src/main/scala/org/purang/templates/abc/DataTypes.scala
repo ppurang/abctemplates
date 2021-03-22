@@ -12,10 +12,10 @@ sealed abstract class SubstitutionPattern {
 final case class AttributePattern(pattern: Pattern)
     extends SubstitutionPattern {
   override val isAttributePattern: Boolean = true
-  override def toString(): String = s"a.[${pattern.p}]"
+  override def toString: String = s"a.[${pattern.p}]"
 }
 
 final case class ElementPattern(pattern: Pattern) extends SubstitutionPattern {
   override val isAttributePattern: Boolean = false
-  override def toString(): String = s"[${pattern.p}]"
+  override def toString: String = s"[${pattern.p}]"
 }
