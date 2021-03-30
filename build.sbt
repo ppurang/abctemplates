@@ -4,7 +4,7 @@ ThisBuild / version := "3.1.0-RC3" //we will follow milestones from scala effect
 
 ThisBuild / organization := "org.purang.templates"
 
-ThisBuild / scalaVersion := "3.0.0-RC1"
+ThisBuild / scalaVersion := "3.0.0-RC2"
 
 ThisBuild / scalacOptions ++= Seq(
   "-encoding",
