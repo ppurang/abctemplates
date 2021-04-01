@@ -1,6 +1,6 @@
 ThisBuild / name := "abctemplates"
 
-ThisBuild / version := "3.1.0-RC3" //we will follow milestones from scala effect 3
+ThisBuild / version := "3.1.0-RC4" //we will follow milestones from scala effect 3
 
 ThisBuild / organization := "org.purang.templates"
 
