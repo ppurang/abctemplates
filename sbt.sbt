@@ -31,6 +31,6 @@ ThisBuild / fork := true
 
 ThisBuild / logBuffered := false
 
-ThisBuild / parallelExecution in Test := true
+ThisBuild / Test / parallelExecution := true
 
 //ThisBuild / scalafmtOnCompile := true

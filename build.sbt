@@ -29,8 +29,8 @@ ThisBuild / licenses += ("BSD", url(
   "http://www.tldrlegal.com/license/bsd-3-clause-license-%28revised%29"
 ))
 
-This / sources in (sbt.Compile, doc) := Seq()
-ThisBuild / publishArtifact in packageSrc := true
-ThisBuild / publishArtifact in packageSrc in Test := false
+(ThisBuild/ sbt.Compile / doc / sources) := Seq()
+(ThisBuild / packageSrc / publishArtifact) := true
+(ThisBuild / Test / packageSrc / publishArtifact) := false
 
 publishTo := sonatypePublishToBundle.value
