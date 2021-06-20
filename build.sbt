@@ -1,10 +1,10 @@
 ThisBuild / name := "abctemplates"
 
-ThisBuild / version := "3.1.0-RC4" //we will follow milestones from scala effect 3
+ThisBuild / version := "3.1.0" //we will follow milestones from scala effect 3
 
 ThisBuild / organization := "org.purang.templates"
 
-ThisBuild / scalaVersion := "3.0.0-RC2"
+ThisBuild / scalaVersion := "3.0.0"
 
 ThisBuild / scalacOptions ++= Seq(
   "-encoding",
@@ -19,8 +19,8 @@ ThisBuild / scalacOptions ++= Seq(
 
 ThisBuild / libraryDependencies ++= Seq(
   "org.jsoup" % "jsoup" % "1.13.1",
-  "org.typelevel" %% "cats-effect" % "3.1.0",
-  "org.scalameta" %% "munit" % "0.7.25"  % Test
+  "org.typelevel" %% "cats-effect" % "3.1.1",
+  "org.scalameta" %% "munit" % "0.7.26"  % Test
 ).map(_ withSources ())
 
 ThisBuild / testFrameworks += new TestFramework("munit.Framework")
