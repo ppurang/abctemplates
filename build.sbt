@@ -20,7 +20,7 @@ ThisBuild / scalacOptions ++= Seq(
 ThisBuild / libraryDependencies ++= Seq(
   "org.jsoup" % "jsoup" % "1.13.1",
   "org.typelevel" %% "cats-effect" % "3.1.1",
-  "org.scalameta" %% "munit" % "0.7.26"  % Test
+  "org.scalameta" %% "munit" % "0.7.27"  % Test
 ).map(_ withSources ())
 
 ThisBuild / testFrameworks += new TestFramework("munit.Framework")
