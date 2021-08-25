@@ -7,7 +7,9 @@ publishMavenStyle := true
 
 // Where is the source code hosted: GitHub or GitLab?
 import xerial.sbt.Sonatype._
-sonatypeProjectHosting := Some(GitHubHosting("ppurang", "abctemplates", "ppurang@gmail.com"))
+sonatypeProjectHosting := Some(
+  GitHubHosting("ppurang", "abctemplates", "ppurang@gmail.com")
+)
 
 // or if you want to set these fields manually
 //homepage := Some(url("https://(your project url)"))
