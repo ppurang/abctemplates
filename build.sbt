@@ -4,7 +4,7 @@ ThisBuild / version := "3.1.0" //we will follow milestones from scala effect 3
 
 ThisBuild / organization := "org.purang.templates"
 
-ThisBuild / scalaVersion := "3.0.1"
+ThisBuild / scalaVersion := "3.0.2"
 
 ThisBuild / scalacOptions ++= Seq(
   "-encoding",
@@ -20,7 +20,7 @@ ThisBuild / scalacOptions ++= Seq(
 ThisBuild / libraryDependencies ++= Seq(
   "org.jsoup" % "jsoup" % "1.14.2",
   "org.typelevel" %% "cats-effect" % "3.2.7",
-  "org.scalameta" %% "munit" % "0.7.28" % Test
+  "org.scalameta" %% "munit" % "0.7.29" % Test
 ).map(_ withSources ())
 
 ThisBuild / testFrameworks += new TestFramework("munit.Framework")
