@@ -22,7 +22,7 @@ object UnsafeMain {
 
     // merge template with a context
     val result: String = template.merge(context)
-    //result should be (note: <p> tags have been dropped)
+    // result should be (note: <p> tags have been dropped)
     //  <div id="content">
     //    <h1>the real content!</h1>
     //  </div>
