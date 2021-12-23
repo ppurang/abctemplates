@@ -5,7 +5,7 @@ import org.purang.templates.abc.unsafe.{Template => UnsafeTemplate}
 
 object JsoupTemplates {
 
-  //def default[F[+_]: [M[_]] =>> ApplicativeError[M, Throwable]]: TemplateAlgebra[F] = new TemplateAlgebra[F] {
+  // def default[F[+_]: [M[_]] =>> ApplicativeError[M, Throwable]]: TemplateAlgebra[F] = new TemplateAlgebra[F] {
   def default[F[+_]](implicit F: ApplicativeError[F, Throwable]): Templates[F] =
     new Templates[F] {
 

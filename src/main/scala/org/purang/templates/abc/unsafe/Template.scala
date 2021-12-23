@@ -27,7 +27,7 @@ class Template private[unsafe] (private val contents: String) {
           .attr(pattr, v)
           .removeAttr(
             s"$ns:$pattr"
-          ) //select("div[abc:href]").attr("href", "somev").remove("abc:href")
+          ) // select("div[abc:href]").attr("href", "somev").remove("abc:href")
       } else {
         val ELAT(_, attr) = k
         document.select(k).html(v).removeAttr(attr)
@@ -38,7 +38,7 @@ class Template private[unsafe] (private val contents: String) {
 
   def embeddedTemplate(cssQuery: String): Option[String] = {
     Either.catchNonFatal {
-      //todo too many documents initialized for #embeddedTemplates
+      // todo too many documents initialized for #embeddedTemplates
       val document: Document =
         Jsoup.parse(contents, "", Parser.xmlParser()).outputSettings(settings)
       document.select(cssQuery).first().outerHtml()
