@@ -19,7 +19,7 @@ ThisBuild / scalacOptions ++= Seq(
 
 ThisBuild / libraryDependencies ++= Seq(
   "org.jsoup" % "jsoup" % "1.14.3",
-  "org.typelevel" %% "cats-effect" % "3.3.1",
+  "org.typelevel" %% "cats-effect" % "3.3.2",
   "org.scalameta" %% "munit" % "0.7.29" % Test
 ).map(_ withSources ())
 
