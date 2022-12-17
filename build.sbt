@@ -1,10 +1,14 @@
 ThisBuild / name := "abctemplates"
 
-ThisBuild / version := "3.1.0" //we will follow milestones from scala effect 3
+ThisBuild / version := "3.2.1" //we will follow milestones from scala effect 3
 
 ThisBuild / organization := "org.purang.templates"
 
-ThisBuild / scalaVersion := "3.1.2"
+ThisBuild / scalaVersion := "3.2.1"
+
+ThisBuild / crossScalaVersions := Seq("3.2.1", "2.13.10")
+
+ThisBuild / versionScheme      := Some("early-semver")
 
 ThisBuild / scalacOptions ++= Seq(
   "-encoding",
@@ -13,13 +17,20 @@ ThisBuild / scalacOptions ++= Seq(
   "-unchecked",
   "-Xfatal-warnings",
   "-deprecation",
-  "-language:implicitConversions",
-  "-Ykind-projector"
-)
+  "-language:implicitConversions"
+) ++ {
+  if (scalaVersion.value.matches("^3.")) {
+    Seq("-Ykind-projector")
+  } else if (scalaVersion.value.matches("^2.12")) {
+    Seq("-language:higherKinds")
+  } else {
+    Seq()
+  }
+}
 
 ThisBuild / libraryDependencies ++= Seq(
-  "org.jsoup" % "jsoup" % "1.15.1",
-  "org.typelevel" %% "cats-effect" % "3.3.11",
+  "org.jsoup" % "jsoup" % "1.15.3",
+  "org.typelevel" %% "cats-effect" % "3.4.2",
   "org.scalameta" %% "munit" % "0.7.29" % Test
 ).map(_ withSources ())
 

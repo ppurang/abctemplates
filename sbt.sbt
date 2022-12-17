@@ -1,4 +1,4 @@
-import Util._
+import OurUtil._
 
 Global / onChangedBuildSource := ReloadOnSourceChanges
 Global / lintUnusedKeysOnLoad := false

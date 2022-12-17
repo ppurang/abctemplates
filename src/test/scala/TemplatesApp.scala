@@ -26,7 +26,7 @@ object TemplatesApp extends IOApp {
 
   def run(args: List[String]): IO[ExitCode] = {
     (for {
-      t <- prg[IO](JsoupTemplates.default)
+      t <- prg[IO](JsoupTemplates.default[IO]) // 2.13.x compatibility
       _ <- IO {
         println(t)
       }

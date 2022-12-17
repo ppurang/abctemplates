@@ -8,7 +8,6 @@ import scala.util.matching.Regex
 import cats.syntax.all._
 //import cats.syntax.traverse._
 import cats.Monoid.combineAll
-import cats.implicits._
 
 class Template private[unsafe] (private val contents: String) {
 
@@ -21,7 +20,7 @@ class Template private[unsafe] (private val contents: String) {
       if (k.startsWith(ATTRIBUTE + ".")) {
         val a: String = k.replaceFirst(ATTRIBUTE + ".", "")
         val NS_ATTRIBUTE(_, ns, pattr) =
-          a // div[abc:href] => div && abc:href && href
+          a : @unchecked// div[abc:href] => div && abc:href && href
         document
           .select(a)
           .attr(pattr, v)
@@ -29,7 +28,7 @@ class Template private[unsafe] (private val contents: String) {
             s"$ns:$pattr"
           ) // select("div[abc:href]").attr("href", "somev").remove("abc:href")
       } else {
-        val ELAT(_, attr) = k
+        val ELAT(_, attr) = k: @unchecked
         document.select(k).html(v).removeAttr(attr)
       }
     }
@@ -45,9 +44,12 @@ class Template private[unsafe] (private val contents: String) {
     }.toOption
   }
 
-  def embeddedTemplates(cssQueries: List[String]): Option[String] = (for {
-    cssQuery <- cssQueries
-  } yield embeddedTemplate(cssQuery)).sequence.map(l => combineAll(l))
+  def embeddedTemplates(cssQueries: List[String]): Option[String] = {
+    val value: List[Option[String]] = for {
+      cssQuery <- cssQueries
+    } yield embeddedTemplate(cssQuery)
+    value.sequence.map(l => combineAll(l)) // 2.13.x compatibility
+  }
 
 }
 
