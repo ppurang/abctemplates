@@ -1,7 +1,7 @@
 package org.purang.templates.abc
 
 import cats._
-import org.purang.templates.abc.unsafe.{Template => UnsafeTemplate}
+import org.purang.templates.abc.unsafe.{ Template => UnsafeTemplate }
 
 object JsoupTemplates {
 

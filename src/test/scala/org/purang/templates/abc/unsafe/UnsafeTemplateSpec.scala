@@ -15,9 +15,9 @@ class UnsafeTemplateSpec extends munit.FunSuite {
 
     val template = Template(h)
 
-    val content: String = "<p>the real content!</p>"
+    val content: String   = "<p>the real content!</p>"
     val attribute: String = "doh-content"
-    val result: String = template.merge(Map("div[doh-content]" -> content))
+    val result: String    = template.merge(Map("div[doh-content]" -> content))
 
     assert(result.contains(content))
     assert(!result.contains(attribute))
@@ -34,9 +34,9 @@ class UnsafeTemplateSpec extends munit.FunSuite {
 
     val template = Template(h)
 
-    val content: String = "<p>the real \n content!</p>"
+    val content: String   = "<p>the real \n content!</p>"
     val attribute: String = "doh-content"
-    val result: String = template.merge(Map("div[doh-content]" -> content))
+    val result: String    = template.merge(Map("div[doh-content]" -> content))
 
     assert(result.contains(content))
     assert(!result.contains(attribute))
@@ -57,8 +57,8 @@ class UnsafeTemplateSpec extends munit.FunSuite {
 
     val template = Template(h)
 
-    val title: String = "altered title"
-    val body: String = "altered body"
+    val title: String  = "altered title"
+    val body: String   = "altered body"
     val result: String =
       template.merge(Map("[abc:title]" -> title, "[abc:body]" -> body))
 
@@ -77,8 +77,8 @@ class UnsafeTemplateSpec extends munit.FunSuite {
 
     val template = Template(h)
 
-    val href: String = "stylesheets/print-sgshgshg.css"
-    val title: String = "altered title"
+    val href: String   = "stylesheets/print-sgshgshg.css"
+    val title: String  = "altered title"
     val result: String =
       template.merge(Map("a.[abc:href]" -> href, "[abc:title]" -> title))
 
@@ -100,8 +100,8 @@ class UnsafeTemplateSpec extends munit.FunSuite {
 
     val template = Template(h)
 
-    val href: String = "altered-link.txt"
-    val text: String = "altered text"
+    val href: String   = "altered-link.txt"
+    val text: String   = "altered text"
     val result: String =
       template.merge(Map("a.[abc:href]" -> href, "[abc:link-text]" -> text))
 
@@ -112,7 +112,7 @@ class UnsafeTemplateSpec extends munit.FunSuite {
 
   test("allow for Nested expressions") {
     sealed trait Sex
-    case object Male extends Sex {
+    case object Male   extends Sex {
       override def toString = "M"
     }
     case object Female extends Sex {
@@ -146,19 +146,19 @@ class UnsafeTemplateSpec extends munit.FunSuite {
 
     val li: String = """<li abc:loc-li>ber</li>"""
 
-    val templateLi = Template(li)
+    val templateLi                          = Template(li)
     def map(p: Person): Map[String, String] = Map(
-      "[abc:sex]" -> p.sex.toString,
+      "[abc:sex]"  -> p.sex.toString,
       "[abc:name]" -> (p.fn + " " + p.ln),
-      "[abc:loc]" -> (for { l <- p.locs.city } yield templateLi.merge(
+      "[abc:loc]"  -> (for { l <- p.locs.city } yield templateLi.merge(
         Map("[abc:loc-li]" -> l)
       )).mkString
     )
 
     val result: String = (for {
       i <- ps
-      x = map(i)
-      y = Template(h).merge(x)
+      x  = map(i)
+      y  = Template(h).merge(x)
     } yield y).mkString
 
     assert(result.contains("Dane Joe"))
@@ -171,7 +171,7 @@ class UnsafeTemplateSpec extends munit.FunSuite {
 
   test("allow for Block expressions") {
     sealed trait Sex
-    case object Male extends Sex {
+    case object Male   extends Sex {
       override def toString = "M"
     }
     case object Female extends Sex {
@@ -202,19 +202,19 @@ class UnsafeTemplateSpec extends munit.FunSuite {
 
     val li: String = """<li abc:loc>ber</li>"""
 
-    val templateLi = Template(li)
+    val templateLi                          = Template(li)
     def map(p: Person): Map[String, String] = Map(
-      "[abc:sex]" -> p.sex.toString,
+      "[abc:sex]"  -> p.sex.toString,
       "[abc:name]" -> (p.fn + " " + p.ln),
-      "[abc:loc]" -> (for { l <- p.locs.city } yield templateLi.merge(
+      "[abc:loc]"  -> (for { l <- p.locs.city } yield templateLi.merge(
         Map("[abc:loc]" -> l)
       )).mkString
     )
 
     val result: String = (for {
       i <- ps
-      x = map(i)
-      y = Template(h).merge(x)
+      x  = map(i)
+      y  = Template(h).merge(x)
     } yield y).mkString
 
     assert(result.contains("Dane Joe"))
@@ -245,11 +245,11 @@ class UnsafeTemplateSpec extends munit.FunSuite {
     assertEquals(
       tc.embeddedTemplate("[abc:loc]"),
       Some("""|<div abc:loc class="location">
-       |  <ul>
-       |    <li abc:loc-li>ber</li>
-       |    <li>muc</li>
-       |  </ul>
-       | </div>""".stripMargin)
+              |  <ul>
+              |    <li abc:loc-li>ber</li>
+              |    <li>muc</li>
+              |  </ul>
+              | </div>""".stripMargin)
     )
     assertEquals(
       tc.embeddedTemplate("[abc:loc-li]"),

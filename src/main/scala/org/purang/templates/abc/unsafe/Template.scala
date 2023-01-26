@@ -18,9 +18,8 @@ class Template private[unsafe] (private val contents: String) {
       Jsoup.parse(contents, "", Parser.xmlParser()).outputSettings(settings)
     m.foreach { case (k, v) =>
       if (k.startsWith(ATTRIBUTE + ".")) {
-        val a: String = k.replaceFirst(ATTRIBUTE + ".", "")
-        val NS_ATTRIBUTE(_, ns, pattr) =
-          a : @unchecked// div[abc:href] => div && abc:href && href
+        val a: String                  = k.replaceFirst(ATTRIBUTE + ".", "")
+        val NS_ATTRIBUTE(_, ns, pattr) = a: @unchecked // div[abc:href] => div && abc:href && href
         document
           .select(a)
           .attr(pattr, v)
@@ -54,8 +53,8 @@ class Template private[unsafe] (private val contents: String) {
 }
 
 object Template {
-  val ATTRIBUTE: String = "a"
-  private val ELAT: Regex = """(.*)\[(.*)]""".r
+  val ATTRIBUTE: String           = "a"
+  private val ELAT: Regex         = """(.*)\[(.*)]""".r
   private val NS_ATTRIBUTE: Regex = """(.*)\[(.*):(.*)]""".r
 
   private val settings: Document.OutputSettings =
