@@ -8,7 +8,7 @@ ThisBuild / scalaVersion := "3.2.1"
 
 ThisBuild / crossScalaVersions := Seq("3.2.1", "2.13.10")
 
-ThisBuild / versionScheme      := Some("early-semver")
+ThisBuild / versionScheme := Some("early-semver")
 
 ThisBuild / scalacOptions ++= Seq(
   "-encoding",
@@ -29,9 +29,9 @@ ThisBuild / scalacOptions ++= Seq(
 }
 
 ThisBuild / libraryDependencies ++= Seq(
-  "org.jsoup" % "jsoup" % "1.15.3",
-  "org.typelevel" %% "cats-effect" % "3.4.5",
-  "org.scalameta" %% "munit" % "0.7.29" % Test
+  "org.jsoup"      % "jsoup"       % "1.15.3",
+  "org.typelevel" %% "cats-effect" % "3.4.6",
+  "org.scalameta" %% "munit"       % "0.7.29" % Test
 ).map(_ withSources ())
 
 ThisBuild / testFrameworks += new TestFramework("munit.Framework")
@@ -40,8 +40,8 @@ ThisBuild / licenses += ("BSD", url(
   "http://www.tldrlegal.com/license/bsd-3-clause-license-%28revised%29"
 ))
 
-(ThisBuild / sbt.Compile / doc / sources) := Seq()
-(ThisBuild / packageSrc / publishArtifact) := true
+(ThisBuild / sbt.Compile / doc / sources)         := Seq()
+(ThisBuild / packageSrc / publishArtifact)        := true
 (ThisBuild / Test / packageSrc / publishArtifact) := false
 
 publishTo := sonatypePublishToBundle.value
