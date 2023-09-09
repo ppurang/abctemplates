@@ -4,9 +4,9 @@ ThisBuild / version := "3.2.1" //we will follow milestones from scala effect 3
 
 ThisBuild / organization := "org.purang.templates"
 
-ThisBuild / scalaVersion := "3.2.2"
+ThisBuild / scalaVersion := "3.3.1"
 
-ThisBuild / crossScalaVersions := Seq("3.2.2", "2.13.10")
+ThisBuild / crossScalaVersions := Seq("3.3.1", "2.13.10")
 
 ThisBuild / versionScheme := Some("early-semver")
 
