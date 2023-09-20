@@ -1,14 +1,17 @@
 ThisBuild / name := "abctemplates"
 
-ThisBuild / version := "3.2.1" //we will follow milestones from scala effect 3
+ThisBuild / version := "3.3.1" //we will follow milestones from scala effect 3
 
 ThisBuild / organization := "org.purang.templates"
 
-ThisBuild / scalaVersion := "3.2.2"
+ThisBuild / scalaVersion := "3.3.1"
 
-ThisBuild / crossScalaVersions := Seq("3.2.2", "2.13.10")
+ThisBuild / crossScalaVersions := Seq("3.3.1", "2.13.12")
 
-ThisBuild / versionScheme := Some("early-semver")
+ThisBuild / versionScheme            := Some("early-semver")
+ThisBuild / fork                     := true
+ThisBuild / logBuffered              := false
+ThisBuild / Test / parallelExecution := true
 
 ThisBuild / scalacOptions ++= Seq(
   "-encoding",
@@ -29,8 +32,8 @@ ThisBuild / scalacOptions ++= Seq(
 }
 
 ThisBuild / libraryDependencies ++= Seq(
-  "org.jsoup"      % "jsoup"       % "1.15.3",
-  "org.typelevel" %% "cats-effect" % "3.4.7",
+  "org.jsoup"      % "jsoup"       % "1.16.1",
+  "org.typelevel" %% "cats-effect" % "3.5.1",
   "org.scalameta" %% "munit"       % "0.7.29" % Test
 ).map(_ withSources ())
 
