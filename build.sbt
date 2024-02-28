@@ -6,7 +6,7 @@ ThisBuild / organization := "org.purang.templates"
 
 ThisBuild / scalaVersion := "3.3.1"
 
-ThisBuild / crossScalaVersions := Seq("3.3.1", "2.13.12")
+ThisBuild / crossScalaVersions := Seq("3.3.1", "2.13.13")
 
 ThisBuild / versionScheme            := Some("early-semver")
 ThisBuild / fork                     := true
